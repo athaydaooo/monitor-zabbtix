@@ -1,64 +1,30 @@
 import { MikroTikClient } from "../clients/mikrotik-client";
 import { ZabbixClient } from "../clients/zabbix-client";
-import { ZabbixSenderService } from "./zabbix-sender-service";
+import { ZabbixSenderClient } from "../clients/zabbix-sender-client";
 
 export class MonitorService {
   private zabbixClient: ZabbixClient;
-  private mikrotikClient: MikroTikClient;
-  private zabbixSender: ZabbixSenderService;
+  private zabbixSender: ZabbixSenderClient;
 
-  constructor(
-    zabbixApiUrl: string,
-    mikrotikUsername: string,
-    mikrotikPassword: string,
-    zabbixServer: string
-  ) {
-    this.zabbixClient = new ZabbixClient(zabbixApiUrl);
-    this.mikrotikClient = new MikroTikClient(
-      mikrotikUsername,
-      mikrotikPassword
-    );
-    this.zabbixSender = new ZabbixSenderService(zabbixServer);
+  constructor(zabbixClient: ZabbixClient, zabbixSender: ZabbixSenderClient) {
+    this.zabbixClient = zabbixClient;
+    this.zabbixSender = zabbixSender;
   }
 
-  async loadBalanceMonitor(): Promise<void> {
-    const dstAddress = "google.com";
-    try {
-      const hosts = await this.zabbixClient.getHosts();
+  async checkAllLoadBalances(): Promise<void> {
+    const hosts = await this.zabbixClient.getHosts("20");
 
-      for (const host of hosts) {
-        const { ip, name } = host;
+    hosts.forEach((host) => {
+      const mikrotikClient = new MikroTikClient(host.interfaces[0].ip, "", "");
 
-        try {
-          const interface1Ping = await this.mikrotikClient.testPing(
-            ip,
-            dstAddress,
-            "ether1"
-          );
-          const interface2Ping = await this.mikrotikClient.testPing(
-            ip,
-            dstAddress,
-            "ether2"
-          );
+      const link1 = await mikrotikClient.ping("google.com", "ether1");
+      const link2 = await mikrotikClient.ping("google.com", "ether2");
 
-          await this.zabbixSender.sendData(
-            name,
-            "mikrotik.interface1.ping",
-            interface1Ping
-          );
-          await this.zabbixSender.sendData(
-            name,
-            "mikrotik.interface2.ping",
-            interface2Ping
-          );
-        } catch (error) {
-          console.log(`Erro ao processar MikroTik ${ip}:`, error);
-        }
-      }
-
-      await this.zabbixSender.sendAll();
-    } catch (error) {
-      console.log("Erro no processo de monitoramento:", error);
-    }
+      await this.zabbixSender.sendData(
+        host.name,
+        "key.interface.uplink.1",
+        link1
+      );
+    });
   }
 }

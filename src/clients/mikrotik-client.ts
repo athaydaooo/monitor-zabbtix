@@ -21,7 +21,7 @@ export class MikroTikClient {
     });
   }
 
-  async ping(dstAddress: string, interfaceName: string): Promise<number> {
+  async ping(dstAddress: string, interfaceName?: string): Promise<number> {
     const pingStatus = await this.client
       .post("ping", {
         params: {

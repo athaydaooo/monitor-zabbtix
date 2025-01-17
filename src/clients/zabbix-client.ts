@@ -46,7 +46,9 @@ export class ZabbixClient {
 
     if (auth.status !== 200) throw Error("autenticacao falhou");
 
-    this.authKey = auth.data.result;
+    const authData = auth.data as AuthorizeResponseData;
+
+    this.authKey = authData.result;
   }
 
   async getHosts(groupId?: string): Promise<Host[]> {
@@ -63,7 +65,7 @@ export class ZabbixClient {
           auth: this.authKey,
         },
       })
-      .then((response) => response.data as AuthorizeResponseData)
+      .then((response) => response.data as GetHostsResponseData)
       .catch((err) => err.response);
 
     if (hosts.status !== 200) return [];
