@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export class ZabbixClient {
   private zabbixApiUrl: string;
@@ -15,7 +15,7 @@ export class ZabbixClient {
         name: host.name,
       }));
     } catch (error) {
-      console.log('Erro ao consultar hosts no Zabbix:', error)
+      console.log("Erro ao consultar hosts no Zabbix:", error);
       throw error;
     }
   }
