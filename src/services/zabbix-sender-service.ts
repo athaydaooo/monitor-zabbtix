@@ -1,4 +1,4 @@
-import  ZabbixSender  from 'zabbix-sender';
+import ZabbixSender from "zabbix-sender";
 
 export class ZabbixSenderService {
   private sender: ZabbixSender;
@@ -13,10 +13,10 @@ export class ZabbixSenderService {
 
   async sendAll(): Promise<void> {
     try {
-        await this.sender.send();
-        console.log('Dados enviados para o Zabbix com sucesso.');
+      await this.sender.send();
+      console.log("Dados enviados para o Zabbix com sucesso.");
     } catch (error) {
-        console.log('Erro ao enviar dados para o Zabbix:', error);
+      console.log("Erro ao enviar dados para o Zabbix:", error);
     }
   }
 }

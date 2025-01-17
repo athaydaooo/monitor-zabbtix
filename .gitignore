@@ -1,0 +1,51 @@
+# Dependências do Node.js
+node_modules/
+
+# Arquivos de configuração local
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Arquivos de IDE/Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs e arquivos temporários
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Arquivos de build/compilação
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Arquivos de cobertura de testes
+coverage/
+.nyc_output/
+
+# Pacotes
+*.tgz
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.js.map
+*.d.ts
+
+# Outros
+.cache/
+.temp/

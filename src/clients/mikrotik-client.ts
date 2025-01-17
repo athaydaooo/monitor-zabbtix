@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 export class MikroTikClient {
   private username: string;
   private password: string;
@@ -8,7 +8,11 @@ export class MikroTikClient {
     this.password = password;
   }
 
-  async testPing(mikrotikIp: string, dstAddress: string ,interfaceName: string): Promise<number> {
+  async testPing(
+    mikrotikIp: string,
+    dstAddress: string,
+    interfaceName: string
+  ): Promise<number> {
     try {
       const url = `http://${mikrotikIp}/rest/ping`;
       const response = await axios.get(url, {
@@ -23,9 +27,12 @@ export class MikroTikClient {
         },
       });
 
-      return response.data['avg-rtt'];
+      return response.data["avg-rtt"];
     } catch (error) {
-      console.log(`Erro ao testar ping na interface ${interfaceName} da MikroTik ${mikrotikIp}:`, error);
+      console.log(
+        `Erro ao testar ping na interface ${interfaceName} da MikroTik ${mikrotikIp}:`,
+        error
+      );
       throw error;
     }
   }
