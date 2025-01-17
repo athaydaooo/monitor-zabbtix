@@ -1,39 +1,46 @@
-import axios from "axios";
-export class MikroTikClient {
-  private username: string;
-  private password: string;
+import axios, { AxiosInstance } from "axios";
 
-  constructor(username: string, password: string) {
-    this.username = username;
-    this.password = password;
+interface PingResponseData {
+  "packet-loss": string;
+  received: string;
+  sent: string;
+}
+export class MikroTikClient {
+  private client: AxiosInstance;
+
+  constructor(ipAddress: string, username: string, password: string) {
+    this.client = axios.create({
+      baseURL: `http://${ipAddress}/rest`,
+      auth: {
+        username,
+        password,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 
-  async testPing(
-    mikrotikIp: string,
-    dstAddress: string,
-    interfaceName: string
-  ): Promise<number> {
-    try {
-      const url = `http://${mikrotikIp}/rest/ping`;
-      const response = await axios.get(url, {
-        auth: {
-          username: this.username,
-          password: this.password,
-        },
+  async ping(dstAddress: string, interfaceName: string): Promise<number> {
+    const pingStatus = await this.client
+      .post("ping", {
         params: {
           address: dstAddress,
           interface: interfaceName,
-          count: 4,
+          count: 2,
         },
-      });
+      })
+      .then((response) => response)
+      .catch((err) => err.response);
 
-      return response.data["avg-rtt"];
-    } catch (error) {
-      console.log(
-        `Erro ao testar ping na interface ${interfaceName} da MikroTik ${mikrotikIp}:`,
-        error
-      );
-      throw error;
-    }
+    if (pingStatus.status !== 200) return 0;
+
+    const allPingsSuccessful = pingStatus.data.every(
+      (element: PingResponseData) => {
+        return element.sent === element.received;
+      }
+    );
+
+    return allPingsSuccessful ? 1 : 0;
   }
 }
