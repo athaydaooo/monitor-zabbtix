@@ -1,32 +1,61 @@
-import axios from 'axios';
-export class MikroTikClient {
-  private username: string;
-  private password: string;
+import axios, { AxiosInstance } from "axios";
+import {
+  MIKROTIK_API_ADDRESS_REQUIRED,
+  MIKROTIK_API_CONFIG_ERROR,
+  MIKROTIK_API_PING_ERROR,
+} from "../errors/mikrotik-api";
+import { AppError } from "../errors";
 
-  constructor(username: string, password: string) {
-    this.username = username;
-    this.password = password;
+interface PingResponseData {
+  "packet-loss": string;
+  received: string;
+  sent: string;
+}
+export class MikroTikClient {
+  private client: AxiosInstance;
+  private address: string;
+
+  constructor(ipAddress: string, username: string, password: string) {
+    if (!ipAddress || !username || !password) {
+      throw MIKROTIK_API_CONFIG_ERROR;
+    }
+    this.address = ipAddress;
+
+    this.client = axios.create({
+      baseURL: `http://${ipAddress}/rest`,
+      auth: {
+        username,
+        password,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 
-  async testPing(mikrotikIp: string, dstAddress: string ,interfaceName: string): Promise<number> {
+  async ping(dstAddress: string, interfaceName?: string): Promise<boolean> {
+    if (!dstAddress) {
+      throw MIKROTIK_API_ADDRESS_REQUIRED;
+    }
+
     try {
-      const url = `http://${mikrotikIp}/rest/ping`;
-      const response = await axios.get(url, {
-        auth: {
-          username: this.username,
-          password: this.password,
-        },
-        params: {
-          address: dstAddress,
-          interface: interfaceName,
-          count: 4,
-        },
+      const pingStatus = await this.client.post<PingResponseData[]>("ping", {
+        address: dstAddress,
+        interface: interfaceName,
+        count: 2,
       });
 
-      return response.data['avg-rtt'];
+      if (pingStatus.status !== 200) return false;
+
+      return pingStatus.data.every((element: PingResponseData) => {
+        return element.sent === element.received;
+      });
     } catch (error) {
-      console.log(`Erro ao testar ping na interface ${interfaceName} da MikroTik ${mikrotikIp}:`, error);
-      throw error;
+      throw new AppError(
+        `Error trying to ping the destination address from ${this.address}.`,
+        400,
+        "MIKROTIK_API.PING_ERROR"
+      );
     }
   }
 }
