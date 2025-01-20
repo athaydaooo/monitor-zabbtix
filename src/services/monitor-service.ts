@@ -22,18 +22,16 @@ export class MonitorService {
 
       const getMikrotikLoadbalances = hosts.map(async (host) => {
         try {
-          console.log(`Checking Load Balance for host ${host.host}`);
           const mikrotikClient = new MikroTikClient(
             host.interfaces[0].ip,
             config.mikrotikLanUser,
             config.mikrotikLanPassword
           );
 
-          console.log(`Pinging to ${healthCheckServer} from interfaces...`);
           const link1 = await mikrotikClient.ping(healthCheckServer, "ether1");
-          console.log(`Pinging from eth1 done: ${link1}`);
+          console.log(`Pinging from ${host.host} eth1 done: ${link1}`);
           const link2 = await mikrotikClient.ping(healthCheckServer, "ether2");
-          console.log(`Pinging from eth2 done: ${link2}`);
+          console.log(`Pinging from ${host.host} eth2 done: ${link2}`);
 
           await this.zabbixSender.addData(
             host.host,
