@@ -2,6 +2,7 @@ import { MikroTikClient } from "../clients/mikrotik-client";
 import { ZabbixClient } from "../clients/zabbix-client";
 import { ZabbixSenderClient } from "../clients/zabbix-sender-client";
 import config from "../config";
+import logger from "../utils/logger";
 
 export class MonitorService {
   private zabbixClient: ZabbixClient;
@@ -20,30 +21,37 @@ export class MonitorService {
       console.log("Sucessfully fetched Hosts from Zabbix");
 
       const getMikrotikLoadbalances = hosts.map(async (host) => {
-        console.log(`Checking Load Balance for host ${host.host}`);
-        const mikrotikClient = new MikroTikClient(
-          host.interfaces[0].ip,
-          config.mikrotikLanUser,
-          config.mikrotikLanPassword
-        );
+        try {
+          console.log(`Checking Load Balance for host ${host.host}`);
+          const mikrotikClient = new MikroTikClient(
+            host.interfaces[0].ip,
+            config.mikrotikLanUser,
+            config.mikrotikLanPassword
+          );
 
-        console.log(`Pinging to ${healthCheckServer} from interfaces...`);
-        const link1 = await mikrotikClient.ping(healthCheckServer, "ether1");
-        console.log(`Pinging from eth1 done: ${link1}`);
-        const link2 = await mikrotikClient.ping(healthCheckServer, "ether2");
-        console.log(`Pinging from eth2 done: ${link2}`);
+          console.log(`Pinging to ${healthCheckServer} from interfaces...`);
+          const link1 = await mikrotikClient.ping(
+            healthCheckServer,
+            "ether1101000"
+          );
+          console.log(`Pinging from eth1 done: ${link1}`);
+          const link2 = await mikrotikClient.ping(healthCheckServer, "ether2");
+          console.log(`Pinging from eth2 done: ${link2}`);
 
-        await this.zabbixSender.addData(
-          host.host,
-          "key.interface.uplink.1",
-          link1 ? 1 : 0
-        );
+          await this.zabbixSender.addData(
+            host.host,
+            "key.interface.uplink.1",
+            link1 ? 1 : 0
+          );
 
-        await this.zabbixSender.addData(
-          host.host,
-          "key.interface.uplink.2",
-          link2 ? 1 : 0
-        );
+          await this.zabbixSender.addData(
+            host.host,
+            "key.interface.uplink.2",
+            link2 ? 1 : 0
+          );
+        } catch (error) {
+          logger.error(`Error on checking LoadBalances`, error);
+        }
       });
 
       await Promise.allSettled(getMikrotikLoadbalances);
@@ -53,7 +61,7 @@ export class MonitorService {
       await this.zabbixSender.sendAll();
       console.log("Data Successfuly to Zabbix...");
     } catch (error) {
-      console.log(error);
+      logger.error(`Error on checking LoadBalances`, error);
     }
   }
 }

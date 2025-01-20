@@ -51,7 +51,6 @@ export class MikroTikClient {
         return element.sent === element.received;
       });
     } catch (error) {
-      console.log(error);
       throw new AppError(
         `Error trying to ping the destination address from ${this.address}.`,
         400,
