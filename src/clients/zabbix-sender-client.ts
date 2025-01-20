@@ -24,7 +24,6 @@ export class ZabbixSenderClient {
     try {
       await this.sender.addItem(host, key, value);
     } catch (error) {
-      console.log(error);
       throw new AppError(
         `Failed to add HOST:${host} data to Zabbix Server`,
         500,
