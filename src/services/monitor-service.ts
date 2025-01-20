@@ -30,10 +30,7 @@ export class MonitorService {
           );
 
           console.log(`Pinging to ${healthCheckServer} from interfaces...`);
-          const link1 = await mikrotikClient.ping(
-            healthCheckServer,
-            "ether1101000"
-          );
+          const link1 = await mikrotikClient.ping(healthCheckServer, "ether1");
           console.log(`Pinging from eth1 done: ${link1}`);
           const link2 = await mikrotikClient.ping(healthCheckServer, "ether2");
           console.log(`Pinging from eth2 done: ${link2}`);
