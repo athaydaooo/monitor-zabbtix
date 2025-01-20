@@ -10,7 +10,7 @@ const config = {
   zabbixServer: process.env.ZABBIX_SERVER || "",
   mikrotikLanUser: process.env.MIKROTIK_LAN_USER || "",
   mikrotikLanPassword: process.env.MIKROTIK_LAN_PASSWORD || "",
-  healthCheckServer: process.env.healthCheckServer || "",
+  healthCheckServer: process.env.HEALTH_CHECK_SERVER || "",
 };
 
 export default config;

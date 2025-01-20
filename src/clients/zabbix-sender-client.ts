@@ -1,4 +1,4 @@
-import ZabbixSender from "zabbix-sender";
+import ZabbixSender, { ZabbixSenderResponse } from "node-zabbix-sender";
 import {
   ZABBIX_SENDER_CONFIG_ERROR,
   ZABBIX_SENDER_SENDDATA_ERROR,
@@ -8,15 +8,12 @@ import { AppError } from "../errors";
 export class ZabbixSenderClient {
   private sender: ZabbixSender;
 
-  constructor(zabbixServer: string, zabbixPort: number) {
+  constructor(zabbixServer: string, zabbixPort?: number) {
     if (!zabbixServer || !zabbixPort) {
       throw ZABBIX_SENDER_CONFIG_ERROR;
     }
 
-    this.sender = new ZabbixSender({
-      host: zabbixServer,
-      port: zabbixPort,
-    });
+    this.sender = new ZabbixSender({ host: zabbixServer, port: zabbixPort });
   }
 
   async addData(host: string, key: string, value: number): Promise<void> {
@@ -25,8 +22,9 @@ export class ZabbixSenderClient {
     }
 
     try {
-      this.sender.addItem(host, key, value);
+      await this.sender.addItem(host, key, value);
     } catch (error) {
+      console.log(error);
       throw new AppError(
         `Failed to add HOST:${host} data to Zabbix Server`,
         500,
@@ -36,15 +34,25 @@ export class ZabbixSenderClient {
   }
 
   async sendAll(): Promise<void> {
-    try {
-      const response = await this.sender.send();
+    const sendPromise = () =>
+      new Promise<ZabbixSenderResponse>((resolve, reject) => {
+        this.sender.send((err, res) => {
+          if (err) {
+            reject(ZABBIX_SENDER_SENDDATA_ERROR); // Rejeita a Promise com o erro
+          } else {
+            resolve(res); // Resolve a Promise com a resposta
+          }
+        });
+      });
 
-      // Verifica se o envio foi bem-sucedido
-      if (!response || !response.success) {
+    try {
+      const sentData = await sendPromise();
+
+      if (!sentData || sentData.response != "success") {
         throw ZABBIX_SENDER_SENDDATA_ERROR;
       }
     } catch (error) {
-      throw error;
+      throw ZABBIX_SENDER_SENDDATA_ERROR;
     }
   }
 }

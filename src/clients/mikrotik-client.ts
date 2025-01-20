@@ -40,11 +40,9 @@ export class MikroTikClient {
 
     try {
       const pingStatus = await this.client.post<PingResponseData[]>("ping", {
-        params: {
-          address: dstAddress,
-          interface: interfaceName,
-          count: 2,
-        },
+        address: dstAddress,
+        interface: interfaceName,
+        count: 2,
       });
 
       if (pingStatus.status !== 200) return false;
@@ -53,6 +51,7 @@ export class MikroTikClient {
         return element.sent === element.received;
       });
     } catch (error) {
+      console.log(error);
       throw new AppError(
         `Error trying to ping the destination address from ${this.address}.`,
         400,
