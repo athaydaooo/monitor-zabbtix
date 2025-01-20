@@ -1,4 +1,10 @@
 import axios, { AxiosInstance } from "axios";
+import {
+  MIKROTIK_API_ADDRESS_REQUIRED,
+  MIKROTIK_API_CONFIG_ERROR,
+  MIKROTIK_API_PING_ERROR,
+} from "../errors/mikrotik-api";
+import { AppError } from "../errors";
 
 interface PingResponseData {
   "packet-loss": string;
@@ -7,8 +13,14 @@ interface PingResponseData {
 }
 export class MikroTikClient {
   private client: AxiosInstance;
+  private address: string;
 
   constructor(ipAddress: string, username: string, password: string) {
+    if (!ipAddress || !username || !password) {
+      throw MIKROTIK_API_CONFIG_ERROR;
+    }
+    this.address = ipAddress;
+
     this.client = axios.create({
       baseURL: `http://${ipAddress}/rest`,
       auth: {
@@ -21,26 +33,31 @@ export class MikroTikClient {
     });
   }
 
-  async ping(dstAddress: string, interfaceName?: string): Promise<number> {
-    const pingStatus = await this.client
-      .post("ping", {
+  async ping(dstAddress: string, interfaceName?: string): Promise<boolean> {
+    if (!dstAddress) {
+      throw MIKROTIK_API_ADDRESS_REQUIRED;
+    }
+
+    try {
+      const pingStatus = await this.client.post<PingResponseData[]>("ping", {
         params: {
           address: dstAddress,
           interface: interfaceName,
           count: 2,
         },
-      })
-      .then((response) => response)
-      .catch((err) => err.response);
+      });
 
-    if (pingStatus.status !== 200) return 0;
+      if (pingStatus.status !== 200) return false;
 
-    const allPingsSuccessful = pingStatus.data.every(
-      (element: PingResponseData) => {
+      return pingStatus.data.every((element: PingResponseData) => {
         return element.sent === element.received;
-      }
-    );
-
-    return allPingsSuccessful ? 1 : 0;
+      });
+    } catch (error) {
+      throw new AppError(
+        `Error trying to ping the destination address from ${this.address}.`,
+        400,
+        "MIKROTIK_API.PING_ERROR"
+      );
+    }
   }
 }
