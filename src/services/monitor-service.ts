@@ -2,8 +2,6 @@ import { MikroTikClient } from "../clients/mikrotik-client";
 import { ZabbixClient } from "../clients/zabbix-client";
 import { ZabbixSenderClient } from "../clients/zabbix-sender-client";
 import config from "../config";
-import { AppError } from "../errors";
-import LoggerUtil from "../utils/logger";
 
 export class MonitorService {
   private zabbixClient: ZabbixClient;
@@ -17,42 +15,45 @@ export class MonitorService {
   async checkAllLoadBalances(): Promise<void> {
     const healthCheckServer = config.healthCheckServer;
     try {
+      console.log("Fetching Hosts from Zabbix...");
       const hosts = await this.zabbixClient.getHosts("20");
+      console.log("Sucessfully fetched Hosts from Zabbix");
 
-      hosts.forEach(async (host) => {
+      const getMikrotikLoadbalances = hosts.map(async (host) => {
+        console.log(`Checking Load Balance for host ${host.host}`);
         const mikrotikClient = new MikroTikClient(
           host.interfaces[0].ip,
           config.mikrotikLanUser,
           config.mikrotikLanPassword
         );
 
+        console.log(`Pinging to ${healthCheckServer} from interfaces...`);
         const link1 = await mikrotikClient.ping(healthCheckServer, "ether1");
+        console.log(`Pinging from eth1 done: ${link1}`);
         const link2 = await mikrotikClient.ping(healthCheckServer, "ether2");
+        console.log(`Pinging from eth2 done: ${link2}`);
 
         await this.zabbixSender.addData(
-          host.name,
+          host.host,
           "key.interface.uplink.1",
           link1 ? 1 : 0
         );
 
         await this.zabbixSender.addData(
-          host.name,
+          host.host,
           "key.interface.uplink.2",
           link2 ? 1 : 0
         );
       });
 
+      await Promise.allSettled(getMikrotikLoadbalances);
+
+      console.log("Sending data to Zabbix...");
+
       await this.zabbixSender.sendAll();
+      console.log("Data Successfuly to Zabbix...");
     } catch (error) {
-      const logger = new LoggerUtil();
-
-      if (error instanceof AppError) logger.error(error.message, error);
-
-      logger.error("Erro inesperado:", {
-        message: error instanceof Error ? error.message : "Erro desconhecido",
-        stack: error instanceof Error ? error.stack : null,
-        rawError: error,
-      });
+      console.log(error);
     }
   }
 }

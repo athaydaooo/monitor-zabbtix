@@ -1,12 +1,13 @@
 import axios, { AxiosInstance } from "axios";
 import Host from "../entities/host";
 import {
-  ZABBIX_API_AUTHENTICATION_ERROR,
   ZABBIX_API_AUTHORIZATION_ERROR,
   ZABBIX_API_CONFIG_ERROR,
   ZABBIX_API_FETCHINGHOSTS_ERROR,
   ZABBIX_API_INVALID_PARAMETERS,
+  ZABBIX_API_MISSING_AUTHENTICATION,
 } from "../errors/zabbix-api";
+import { Console } from "console";
 
 interface AuthorizeResponseData {
   jsonrpc: string;
@@ -42,19 +43,18 @@ export class ZabbixClient {
     if (!username || !password) throw ZABBIX_API_INVALID_PARAMETERS;
     try {
       const auth = await this.client.post<AuthorizeResponseData>("", {
-        body: {
-          jsonrpc: "2.0",
-          method: "user.login",
-          params: {
-            user: username,
-            password: password,
-          },
-          id: 1,
-          auth: null,
+        jsonrpc: "2.0",
+        method: "user.login",
+        params: {
+          user: username,
+          password: password,
         },
+        id: 1,
+        auth: null,
       });
 
-      if (auth.status !== 200) throw ZABBIX_API_AUTHORIZATION_ERROR;
+      if (auth.status !== 200 || !auth.data)
+        throw ZABBIX_API_AUTHORIZATION_ERROR;
 
       const authData = auth.data;
 
@@ -65,20 +65,19 @@ export class ZabbixClient {
   }
 
   async getHosts(groupId?: string): Promise<Host[]> {
-    if (!this.authKey) throw ZABBIX_API_AUTHENTICATION_ERROR;
+    if (!this.authKey) throw ZABBIX_API_MISSING_AUTHENTICATION;
 
     try {
       const hosts = await this.client.post<GetHostsResponseData>("", {
-        body: {
-          jsonrpc: "2.0",
-          method: "host.get",
-          params: {
-            output: ["hostid", "host"],
-            groupids: groupId,
-          },
-          id: 2,
-          auth: this.authKey,
+        jsonrpc: "2.0",
+        method: "host.get",
+        params: {
+          output: ["hostid", "host"],
+          groupids: groupId,
+          selectInterfaces: ["ip"],
         },
+        id: 2,
+        auth: this.authKey,
       });
 
       if (hosts.status !== 200) throw ZABBIX_API_FETCHINGHOSTS_ERROR;
