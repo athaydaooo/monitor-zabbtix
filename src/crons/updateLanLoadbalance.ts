@@ -3,7 +3,7 @@ import { ZabbixSenderClient } from "../clients/zabbix-sender-client";
 import config from "../config";
 import { AppError } from "../errors";
 import { MonitorService } from "../services/monitor-service";
-import LoggerUtil from "../utils/logger";
+import logger from "../utils/logger";
 
 async function main() {
   try {
@@ -21,8 +21,6 @@ async function main() {
 
     await monitorService.checkAllLoadBalances();
   } catch (error) {
-    const logger = new LoggerUtil();
-
     if (error instanceof AppError) logger.error(error.message, error);
 
     logger.error("Erro inesperado:", {
