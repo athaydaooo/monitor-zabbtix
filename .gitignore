@@ -1,5 +1,5 @@
 # Dependências do Node.js
-node_modules/
+node_modules
 
 # Arquivos de configuração local
 .env
@@ -30,21 +30,6 @@ dist/
 build/
 out/
 *.tsbuildinfo
-
-# Arquivos de cobertura de testes
-coverage/
-.nyc_output/
-
-# Pacotes
-*.tgz
-
-# Sistema operacional
-.DS_Store
-Thumbs.db
-
-# TypeScript
-*.js.map
-*.d.ts
 
 # Outros
 .cache/
