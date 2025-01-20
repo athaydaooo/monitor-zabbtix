@@ -1,5 +1,12 @@
 import axios, { AxiosInstance } from "axios";
 import Host from "../entities/host";
+import {
+  ZABBIX_API_AUTHENTICATION_ERROR,
+  ZABBIX_API_AUTHORIZATION_ERROR,
+  ZABBIX_API_CONFIG_ERROR,
+  ZABBIX_API_FETCHINGHOSTS_ERROR,
+  ZABBIX_API_INVALID_PARAMETERS,
+} from "../errors/zabbix-api";
 
 interface AuthorizeResponseData {
   jsonrpc: string;
@@ -18,6 +25,10 @@ export class ZabbixClient {
   private authKey: string | null;
 
   constructor(zabbixApiUrl: string) {
+    if (!zabbixApiUrl) {
+      throw ZABBIX_API_CONFIG_ERROR;
+    }
+
     this.authKey = null;
     this.client = axios.create({
       baseURL: zabbixApiUrl,
@@ -28,8 +39,9 @@ export class ZabbixClient {
   }
 
   async authorize(username: string, password: string): Promise<void> {
-    const auth = await this.client
-      .post("", {
+    if (!username || !password) throw ZABBIX_API_INVALID_PARAMETERS;
+    try {
+      const auth = await this.client.post<AuthorizeResponseData>("", {
         body: {
           jsonrpc: "2.0",
           method: "user.login",
@@ -40,20 +52,23 @@ export class ZabbixClient {
           id: 1,
           auth: null,
         },
-      })
-      .then((response) => response)
-      .catch((err) => err.response);
+      });
 
-    if (auth.status !== 200) throw Error("autenticacao falhou");
+      if (auth.status !== 200) throw ZABBIX_API_AUTHORIZATION_ERROR;
 
-    const authData = auth.data as AuthorizeResponseData;
+      const authData = auth.data;
 
-    this.authKey = authData.result;
+      this.authKey = authData.result;
+    } catch (error) {
+      throw ZABBIX_API_AUTHORIZATION_ERROR;
+    }
   }
 
   async getHosts(groupId?: string): Promise<Host[]> {
-    const hosts = await this.client
-      .post("", {
+    if (!this.authKey) throw ZABBIX_API_AUTHENTICATION_ERROR;
+
+    try {
+      const hosts = await this.client.post<GetHostsResponseData>("", {
         body: {
           jsonrpc: "2.0",
           method: "host.get",
@@ -64,12 +79,13 @@ export class ZabbixClient {
           id: 2,
           auth: this.authKey,
         },
-      })
-      .then((response) => response.data as GetHostsResponseData)
-      .catch((err) => err.response);
+      });
 
-    if (hosts.status !== 200) return [];
+      if (hosts.status !== 200) throw ZABBIX_API_FETCHINGHOSTS_ERROR;
 
-    return hosts.data.result;
+      return hosts.data.result;
+    } catch (error) {
+      throw ZABBIX_API_FETCHINGHOSTS_ERROR;
+    }
   }
 }
