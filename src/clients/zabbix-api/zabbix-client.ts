@@ -1,13 +1,12 @@
 import axios, { AxiosInstance } from "axios";
-import Host from "../entities/host";
 import {
   ZABBIX_API_AUTHORIZATION_ERROR,
   ZABBIX_API_CONFIG_ERROR,
   ZABBIX_API_FETCHINGHOSTS_ERROR,
   ZABBIX_API_INVALID_PARAMETERS,
   ZABBIX_API_MISSING_AUTHENTICATION,
-} from "../errors/zabbix-api";
-import { Console } from "console";
+} from "../../errors/zabbix-api";
+import Host from "../../types/dto/zabbix/host";
 
 interface AuthorizeResponseData {
   jsonrpc: string;

@@ -1,0 +1,3 @@
+interface IdentityDTO {
+  name: string;
+}
