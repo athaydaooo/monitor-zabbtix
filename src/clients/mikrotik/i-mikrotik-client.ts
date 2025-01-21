@@ -1,5 +1,7 @@
-import { InterfaceDTO } from "../../types/dto/mikrotik/interface-dto";
-import { ResourceDTO } from "../../types/dto/mikrotik/resource-dto";
+import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
+import { ResourceDTO } from "@dto/mikrotik/resource-dto";
+import { IdentityDTO } from "@dto/mikrotik/identity-dto";
+import { PingDTO } from "@dto/mikrotik/ping-dto";
 
 export abstract class IMikroTikClient {
   abstract getPing(

@@ -1,8 +1,10 @@
-import { Lan } from "../../types/domain/Lan";
-import { InterfaceDTO } from "../../types/dto/mikrotik/interface-dto";
-import { ResourceDTO } from "../../types/dto/mikrotik/resource-dto";
-import { miktotikToLan } from "../../utils/mikrotik-to-lan";
-import { mikrotikUptimeToDays } from "../../utils/mikrotikuptime-to-days";
+import { Lan } from "@domain/Lan";
+import { IdentityDTO } from "@dto/mikrotik/identity-dto";
+import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
+import { PingDTO } from "@dto/mikrotik/ping-dto";
+import { ResourceDTO } from "@dto/mikrotik/resource-dto";
+import { miktotikToLan } from "@utils/mikrotik-to-lan";
+import { mikrotikUptimeToDays } from "@utils/mikrotikuptime-to-days";
 
 class MikrotikLanMapper {
   static toDomain(
