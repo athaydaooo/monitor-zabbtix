@@ -4,8 +4,9 @@ import {
   ZABBIX_SENDER_SENDDATA_ERROR,
 } from "@errors/zabbix-server";
 import ZabbixSender, { ZabbixSenderResponse } from "node-zabbix-sender";
+import { IZabbixSenderClient } from "./i-zabbix-sender-client";
 
-export class IZabbixSenderClient implements IZabbixSenderClient {
+export class ZabbixSenderClient implements IZabbixSenderClient {
   private sender: ZabbixSender;
 
   constructor(zabbixServer: string, zabbixPort?: number) {
@@ -16,7 +17,11 @@ export class IZabbixSenderClient implements IZabbixSenderClient {
     this.sender = new ZabbixSender({ host: zabbixServer, port: zabbixPort });
   }
 
-  async addData(host: string, key: string, value: number): Promise<void> {
+  async addData(
+    host: string,
+    key: string,
+    value: string | number
+  ): Promise<void> {
     if (!host || !key || value === undefined || value === null) {
       throw ZABBIX_SENDER_CONFIG_ERROR;
     }
@@ -52,6 +57,18 @@ export class IZabbixSenderClient implements IZabbixSenderClient {
       }
     } catch (error) {
       throw ZABBIX_SENDER_SENDDATA_ERROR;
+    }
+  }
+
+  async clearItems(): Promise<void> {
+    try {
+      await this.sender.clearItems();
+    } catch (error) {
+      throw new AppError(
+        `Failed to clear items `,
+        500,
+        "ZABBIX_CLEAR_DATA_ERROR"
+      );
     }
   }
 }

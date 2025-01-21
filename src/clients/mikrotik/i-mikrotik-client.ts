@@ -9,7 +9,7 @@ export abstract class IMikroTikClient {
     interfaceName?: string
   ): Promise<PingDTO[]>;
 
-  abstract getResource(): Promise<ResourceDTO[]>;
+  abstract getResource(): Promise<ResourceDTO>;
 
   abstract getIdentity(): Promise<IdentityDTO>;
 
