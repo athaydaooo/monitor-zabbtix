@@ -1,14 +1,17 @@
 import { MikroTikClient } from "@clients/mikrotik/mikrotik-client";
-import { ZabbixApiClient } from "@clients/zabbix-api/zabbix-api-client";
-import { ZabbixSenderClient } from "@clients/zabbix-sender/zabbix-sender-client";
+import { IZabbixApiClient } from "@clients/zabbix-api/i-zabbix-api-client";
+import { IZabbixSenderClient } from "@clients/zabbix-sender/zabbix-sender-client";
 import config from "@config/index";
 import logger from "@utils/logger";
 
 export class MonitorService {
-  private zabbixClient: ZabbixApiClient;
-  private zabbixSender: ZabbixSenderClient;
+  private zabbixClient: IZabbixApiClient;
+  private zabbixSender: IZabbixSenderClient;
 
-  constructor(zabbixClient: ZabbixApiClient, zabbixSender: ZabbixSenderClient) {
+  constructor(
+    zabbixClient: IZabbixApiClient,
+    zabbixSender: IZabbixSenderClient
+  ) {
     this.zabbixClient = zabbixClient;
     this.zabbixSender = zabbixSender;
   }
