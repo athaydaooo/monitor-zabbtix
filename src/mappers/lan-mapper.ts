@@ -21,7 +21,6 @@ class MikrotikLanMapper {
 
     return {
       hostname: identityData.name,
-      ping: true,
       ipAddress,
       uptime: this.mikrotikUptimeToDays(resourceData.uptime),
       eth1: this.miktotikToLan(eth1, pingFromEth1),

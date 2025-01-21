@@ -51,7 +51,6 @@ export class ZabbixSenderClient implements IZabbixSenderClient {
 
     try {
       const sentData = await sendPromise();
-
       if (!sentData || sentData.response != "success") {
         throw ZABBIX_SENDER_SENDDATA_ERROR;
       }

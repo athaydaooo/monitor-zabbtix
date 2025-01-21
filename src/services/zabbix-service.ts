@@ -8,29 +8,24 @@ export class ZabbixService {
     this.zabbixSenderClient = zabbixSenderClient;
   }
 
-  async addLan(lanData: Lan): Promise<void> {
+  async addLan(zabbixHostName: string, lanData: Lan): Promise<void> {
     await this.zabbixSenderClient.addData(
-      lanData.hostname,
-      "hostname",
+      zabbixHostName,
+      "sysname",
       lanData.hostname
     );
 
     await this.zabbixSenderClient.addData(
-      lanData.hostname,
-      "ping",
-      lanData.ping ? 1 : 0
-    );
-    await this.zabbixSenderClient.addData(
-      lanData.hostname,
+      zabbixHostName,
       "uptime",
       lanData.uptime
     );
 
-    await this.sendInterfaceData(lanData.hostname, "eth1", lanData.eth1);
-    await this.sendInterfaceData(lanData.hostname, "eth2", lanData.eth2);
-    await this.sendInterfaceData(lanData.hostname, "eth3", lanData.eth3);
-    await this.sendInterfaceData(lanData.hostname, "eth4", lanData.eth4);
-    await this.sendInterfaceData(lanData.hostname, "eth5", lanData.eth5);
+    await this.sendInterfaceData(zabbixHostName, "1", lanData.eth1);
+    await this.sendInterfaceData(zabbixHostName, "2", lanData.eth2);
+    await this.sendInterfaceData(zabbixHostName, "3", lanData.eth3);
+    await this.sendInterfaceData(zabbixHostName, "4", lanData.eth4);
+    await this.sendInterfaceData(zabbixHostName, "5", lanData.eth5);
   }
 
   async clear(): Promise<void> {

@@ -21,10 +21,10 @@ export class MonitorService {
         try {
           const mikrotikService = new MikrotikService(host.interfaces[0].ip);
           const lan = await mikrotikService.getLan();
-          await this.zabbixService.addLan(lan);
+          await this.zabbixService.addLan(host.host, lan);
           await this.zabbixService.send();
         } catch (error) {
-          logger.error(`Error trying to updateLan ${host.name}`, error);
+          logger.error(`Error trying to updateLan ${host.host}`, error);
         }
       });
 
