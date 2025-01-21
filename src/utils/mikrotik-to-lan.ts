@@ -1,5 +1,6 @@
-import { LanInterface } from "../types/domain/Lan";
-import { InterfaceDTO } from "../types/dto/mikrotik/interface-dto";
+import { LanInterface } from "@domain/Lan";
+import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
+import { PingDTO } from "@dto/mikrotik/ping-dto";
 
 export function miktotikToLan(
   interfaceData: InterfaceDTO | undefined,

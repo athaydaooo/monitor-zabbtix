@@ -1,4 +1,4 @@
-interface PingDTO {
+export interface PingDTO {
   "packet-loss": string;
   received: string;
   sent: string;

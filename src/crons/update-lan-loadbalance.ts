@@ -1,9 +1,9 @@
-import { ZabbixClient } from "../clients/zabbix-api/zabbix-client";
-import { ZabbixSenderClient } from "../clients/zabbix-sender-client";
-import config from "../config";
-import { AppError } from "../errors";
-import { MonitorService } from "../services/monitor-service";
-import logger from "../utils/logger";
+import { ZabbixApiClient } from "@clients/zabbix-api/zabbix-api-client";
+import { ZabbixSenderClient } from "@clients/zabbix-sender/zabbix-sender-client";
+import config from "@config/index";
+import { AppError } from "@errors/index";
+import { MonitorService } from "@services/monitor-service";
+import logger from "@utils/logger";
 
 async function main() {
   try {
@@ -11,7 +11,7 @@ async function main() {
       config.zabbixServer,
       config.zabbixServerPort
     );
-    const zabbixClient = new ZabbixClient(config.zabbixApiUrl);
+    const zabbixClient = new ZabbixApiClient(config.zabbixApiUrl);
     await zabbixClient.authorize(
       config.zabbixApiUsername,
       config.zabbixApiPassword

@@ -1,9 +1,9 @@
-import ZabbixSender, { ZabbixSenderResponse } from "node-zabbix-sender";
+import { AppError } from "@errors/index";
 import {
   ZABBIX_SENDER_CONFIG_ERROR,
   ZABBIX_SENDER_SENDDATA_ERROR,
-} from "../errors/zabbix-server";
-import { AppError } from "../errors";
+} from "@errors/zabbix-server";
+import ZabbixSender, { ZabbixSenderResponse } from "node-zabbix-sender";
 
 export class ZabbixSenderClient {
   private sender: ZabbixSender;

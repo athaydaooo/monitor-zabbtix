@@ -1,15 +1,16 @@
 import axios, { AxiosInstance } from "axios";
+import { IdentityDTO } from "@dto/mikrotik/identity-dto";
+import { IMikroTikClient } from "./i-mikrotik-client";
 import {
   getIdentityError,
   getPingError,
   getResourceError,
   MIKROTIK_API_ADDRESS_REQUIRED,
   MIKROTIK_API_CONFIG_ERROR,
-} from "../../errors/mikrotik-api";
-import { ResourceDTO } from "../../types/dto/mikrotik/resource-dto";
-import { IMikroTikClient } from "./i-mikrotik-client";
-import { Interface } from "readline";
-import { InterfaceDTO } from "../../types/dto/mikrotik/interface-dto";
+} from "@errors/mikrotik-api";
+import { ResourceDTO } from "@dto/mikrotik/resource-dto";
+import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
+import { PingDTO } from "@dto/mikrotik/ping-dto";
 
 export class MikroTikClient implements IMikroTikClient {
   private client: AxiosInstance;

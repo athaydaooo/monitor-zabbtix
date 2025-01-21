@@ -1,3 +1,3 @@
-interface IdentityDTO {
+export interface IdentityDTO {
   name: string;
 }
