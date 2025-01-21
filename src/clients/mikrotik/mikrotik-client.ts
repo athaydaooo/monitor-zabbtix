@@ -57,9 +57,9 @@ export class MikroTikClient implements IMikroTikClient {
     }
   }
 
-  async getResource(): Promise<ResourceDTO[]> {
+  async getResource(): Promise<ResourceDTO> {
     try {
-      const uptime = await this.client.get<ResourceDTO[]>("/system/resource");
+      const uptime = await this.client.get<ResourceDTO>("/system/resource");
 
       if (uptime.status !== 200) throw getResourceError(this.address);
 
