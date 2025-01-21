@@ -1,6 +1,6 @@
-import { MikroTikClient } from "../clients/mikrotik-client";
-import { ZabbixClient } from "../clients/zabbix-client";
-import { ZabbixSenderClient } from "../clients/zabbix-sender-client";
+import { MikroTikClient } from "../clients/mikrotik/mikrotik-client";
+import { ZabbixClient } from "../clients/zabbix-api/zabbix-client";
+import { ZabbixSenderClient } from "../clients/zabbix-sender/zabbix-sender-client";
 import config from "../config";
 import logger from "../utils/logger";
 
@@ -28,9 +28,15 @@ export class MonitorService {
             config.mikrotikLanPassword
           );
 
-          const link1 = await mikrotikClient.ping(healthCheckServer, "ether1");
+          const link1 = await mikrotikClient.getPing(
+            healthCheckServer,
+            "ether1"
+          );
           logger.info(`Pinging from ${host.host} eth1 done: ${link1}`);
-          const link2 = await mikrotikClient.ping(healthCheckServer, "ether2");
+          const link2 = await mikrotikClient.getPing(
+            healthCheckServer,
+            "ether2"
+          );
           logger.info(`Pinging from ${host.host} eth2 done: ${link2}`);
 
           await this.zabbixSender.addData(

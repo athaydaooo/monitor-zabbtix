@@ -1,4 +1,4 @@
-import { ZabbixClient } from "../clients/zabbix-client";
+import { ZabbixClient } from "../clients/zabbix-api/zabbix-client";
 import { ZabbixSenderClient } from "../clients/zabbix-sender-client";
 import config from "../config";
 import { AppError } from "../errors";
