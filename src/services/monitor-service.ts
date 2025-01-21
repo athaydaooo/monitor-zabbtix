@@ -16,7 +16,7 @@ export class MonitorService {
     this.zabbixSender = zabbixSender;
   }
 
-  async checkAllLoadBalances(): Promise<void> {
+  async updateLanLoadbalance(): Promise<void> {
     const healthCheckServer = config.healthCheckServer;
     try {
       logger.info("Fetching Hosts from Zabbix...");
