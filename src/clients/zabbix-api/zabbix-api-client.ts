@@ -7,6 +7,7 @@ import {
   ZABBIX_API_MISSING_AUTHENTICATION,
 } from "@errors/zabbix-api";
 import axios, { AxiosInstance } from "axios";
+import { IZabbixApiClient } from "./i-zabbix-api-client";
 
 interface AuthorizeResponseData {
   jsonrpc: string;
@@ -20,7 +21,7 @@ interface GetHostsResponseData {
   id: number;
 }
 
-export class ZabbixApiClient {
+export class ZabbixApiClient implements IZabbixApiClient {
   private client: AxiosInstance;
   private authKey: string | null;
 

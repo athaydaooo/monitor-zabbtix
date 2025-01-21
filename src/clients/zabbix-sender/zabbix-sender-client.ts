@@ -5,7 +5,7 @@ import {
 } from "@errors/zabbix-server";
 import ZabbixSender, { ZabbixSenderResponse } from "node-zabbix-sender";
 
-export class ZabbixSenderClient {
+export class IZabbixSenderClient implements IZabbixSenderClient {
   private sender: ZabbixSender;
 
   constructor(zabbixServer: string, zabbixPort?: number) {
