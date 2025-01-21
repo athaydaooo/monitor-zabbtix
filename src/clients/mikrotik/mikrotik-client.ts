@@ -71,7 +71,7 @@ export class MikroTikClient implements IMikroTikClient {
 
   async getIdentity(): Promise<IdentityDTO> {
     try {
-      const identity = await this.client.get<IdentityDTO>("/system/identity/");
+      const identity = await this.client.get<IdentityDTO>("/system/identity");
 
       if (identity.status !== 200) throw getIdentityError(this.address);
 
