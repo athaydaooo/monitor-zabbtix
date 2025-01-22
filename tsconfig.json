@@ -1,14 +1,25 @@
 {
-    "compilerOptions": {
-      "target": "ES6",
-      "module": "commonjs",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "outDir": "./dist",
-      "typeRoots": ["./node_modules/@types", "./@types"]
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"]
-  }
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "typeRoots": ["./node_modules/@types", "./@types"],
+    "baseUrl": "./src",
+    "paths": {
+      "@clients/*": ["clients/*"],
+      "@services/*": ["services/*"],
+      "@errors/*": ["errors/*"],
+      "@domain/*": ["types/domain/*"],
+      "@dto/*": ["types/dto/*"],
+      "@utils/*": ["utils/*"],
+      "@config/*": ["config/*"],
+      "@crons/*": ["crons/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

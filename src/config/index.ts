@@ -11,6 +11,7 @@ const config = {
   mikrotikLanUser: process.env.MIKROTIK_LAN_USER || "",
   mikrotikLanPassword: process.env.MIKROTIK_LAN_PASSWORD || "",
   healthCheckServer: process.env.HEALTH_CHECK_SERVER || "",
+  lanHostGroupId: process.env.LAN_HOST_GROUP_ID || "",
 };
 
 export default config;
