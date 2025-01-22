@@ -1,6 +1,9 @@
 import * as dotenv from "dotenv";
 
-dotenv.config();
+import path from "path";
+
+const envPath = path.resolve(__dirname, "../../.env");
+dotenv.config({ path: envPath });
 
 const config = {
   zabbixApiUrl: process.env.ZABBIX_API_URL || "",
