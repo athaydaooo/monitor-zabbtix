@@ -1,7 +1,7 @@
 export interface Lan {
   hostname: string;
   ipAddress: string;
-  uptime: string;
+  uptime: number;
   eth1: LanInterface | null;
   eth2: LanInterface | null;
   eth3: LanInterface | null;

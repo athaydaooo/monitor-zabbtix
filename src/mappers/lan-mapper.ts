@@ -51,7 +51,7 @@ class MikrotikLanMapper {
     };
   }
 
-  private static mikrotikUptimeToDays(uptime: string): string {
+  private static mikrotikUptimeToDays(uptime: string): number {
     const weeksMatch = uptime.match(/(\d+)w/);
     const daysMatch = uptime.match(/(\d+)d/);
 
@@ -60,7 +60,7 @@ class MikrotikLanMapper {
 
     const totalDays = weeks * 7 + days;
 
-    return `${totalDays}d`;
+    return totalDays;
   }
 }
 
