@@ -1,5 +1,6 @@
 import { IZabbixSenderClient } from "@clients/zabbix-sender/i-zabbix-sender-client";
 import { Lan, LanInterface } from "@domain/Lan";
+import logger from "@utils/logger";
 
 export class ZabbixService {
   private zabbixSenderClient: IZabbixSenderClient;
@@ -32,8 +33,15 @@ export class ZabbixService {
     await this.zabbixSenderClient.clearItems();
   }
 
-  async send(): Promise<void> {
-    await this.zabbixSenderClient.sendAll();
+  async send(hostname: string): Promise<void> {
+    const sentData = await this.zabbixSenderClient.sendAll();
+
+    if (sentData.failed > 0) {
+      logger.info(`${hostname} - Data sent with ${sentData.failed} failed`);
+      return;
+    }
+
+    logger.info(`${hostname} - Data sent sent successfully`);
   }
 
   private async sendInterfaceData(
