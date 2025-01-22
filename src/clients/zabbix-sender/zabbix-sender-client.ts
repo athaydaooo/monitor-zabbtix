@@ -6,6 +6,11 @@ import {
 import ZabbixSender, { ZabbixSenderResponse } from "node-zabbix-sender";
 import { IZabbixSenderClient } from "./i-zabbix-sender-client";
 
+export interface SendInfo {
+  processed: number;
+  failed: number;
+  total: number;
+}
 export class ZabbixSenderClient implements IZabbixSenderClient {
   private sender: ZabbixSender;
 
@@ -37,23 +42,26 @@ export class ZabbixSenderClient implements IZabbixSenderClient {
     }
   }
 
-  async sendAll(): Promise<void> {
+  async sendAll(): Promise<SendInfo> {
     const sendPromise = () =>
       new Promise<ZabbixSenderResponse>((resolve, reject) => {
         this.sender.send((err, res) => {
           if (err) {
-            reject(ZABBIX_SENDER_SENDDATA_ERROR); // Rejeita a Promise com o erro
+            reject(ZABBIX_SENDER_SENDDATA_ERROR);
           } else {
-            resolve(res); // Resolve a Promise com a resposta
+            resolve(res);
           }
         });
       });
 
     try {
       const sentData = await sendPromise();
+
       if (!sentData || sentData.response != "success") {
         throw ZABBIX_SENDER_SENDDATA_ERROR;
       }
+
+      return this.parseZabbixResponse(sentData.info);
     } catch (error) {
       throw ZABBIX_SENDER_SENDDATA_ERROR;
     }
@@ -69,5 +77,22 @@ export class ZabbixSenderClient implements IZabbixSenderClient {
         "ZABBIX_CLEAR_DATA_ERROR"
       );
     }
+  }
+  private parseZabbixResponse(response: string): SendInfo {
+    const result: SendInfo = {
+      processed: 0,
+      failed: 0,
+      total: 0,
+    };
+    const parts = response.split(";");
+
+    parts.forEach((part) => {
+      const [key, value] = part.split(":").map((item) => item.trim());
+      if (key && value !== undefined) {
+        result[key as keyof typeof result] = parseFloat(value);
+      }
+    });
+
+    return result;
   }
 }

@@ -1,3 +1,5 @@
+import { SendInfo } from "./zabbix-sender-client";
+
 export abstract class IZabbixSenderClient {
   abstract addData(
     host: string,
@@ -5,6 +7,6 @@ export abstract class IZabbixSenderClient {
     value: string | number
   ): Promise<void>;
 
-  abstract sendAll(): Promise<void>;
+  abstract sendAll(): Promise<SendInfo>;
   abstract clearItems(): Promise<void>;
 }
