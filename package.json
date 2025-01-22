@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsup src/**/*.ts --out-dir dist",
+    "build": "tsup src/**/*.ts --out-dir dist --clean",
     "updatelans": "ts-node -r tsconfig-paths/register src/crons/update-all-lan.ts"
   },
   "keywords": [],
