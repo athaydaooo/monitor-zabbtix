@@ -58,7 +58,7 @@ class MikrotikLanMapper {
     const weeks = weeksMatch ? parseInt(weeksMatch[1]) : 0;
     const days = daysMatch ? parseInt(daysMatch[1]) : 0;
 
-    const totalDays = weeks * 7 + days;
+    const totalDays = Math.ceil(weeks * 7 + days);
 
     return totalDays;
   }
