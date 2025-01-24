@@ -40,6 +40,8 @@ export class MikrotikService {
       "ether3"
     );
 
+    const resolvedDns = await this.mikrotikClient.resolveDns(healthCheckServer);
+
     const lan = MikrotikLanMapper.toDomain(
       this.ipAddress,
       identity,
@@ -48,7 +50,8 @@ export class MikrotikService {
       pingFromEth1,
       pingFromEth2,
       pingFromEth3,
-      pingFromEth4
+      pingFromEth4,
+      resolvedDns
     );
 
     return lan;
