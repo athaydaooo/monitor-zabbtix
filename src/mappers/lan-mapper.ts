@@ -2,6 +2,7 @@ import { Lan, LanInterface } from "@domain/Lan";
 import { IdentityDTO } from "@dto/mikrotik/identity-dto";
 import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
 import { PingDTO } from "@dto/mikrotik/ping-dto";
+import { ResolveDnsDTO } from "@dto/mikrotik/resolve-dns-dto";
 import { ResourceDTO } from "@dto/mikrotik/resource-dto";
 
 class MikrotikLanMapper {
@@ -13,7 +14,8 @@ class MikrotikLanMapper {
     pingFromEth1: PingDTO[],
     pingFromEth2: PingDTO[],
     pingFromEth3: PingDTO[],
-    pingFromEth4: PingDTO[]
+    pingFromEth4: PingDTO[],
+    resolvedDns: ResolveDnsDTO
   ): Lan {
     const eth1 = interfacesData.find((i) => i["default-name"] === "ether1");
     const eth2 = interfacesData.find((i) => i["default-name"] === "ether2");
@@ -24,6 +26,7 @@ class MikrotikLanMapper {
     return {
       hostname: identityData.name,
       ipAddress,
+      dns: !!resolvedDns.ret,
       uptime: this.mikrotikUptimeToDays(resourceData.uptime),
       eth1: this.miktotikToLan(eth1, pingFromEth1),
       eth2: this.miktotikToLan(eth2, pingFromEth2),

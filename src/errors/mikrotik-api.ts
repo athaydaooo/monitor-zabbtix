@@ -49,3 +49,9 @@ export const getInterfacesError = (address: string): AppError => {
     "MIKROTIK_API.INTERFACES_ERROR"
   );
 };
+
+export const MIKROTIK_API_RESOLVEDNS_ERROR = new AppError(
+  `Error trying to resolve dns.`,
+  500,
+  "MIKROTIK_API.RESOLVEDNS_ERROR"
+);
