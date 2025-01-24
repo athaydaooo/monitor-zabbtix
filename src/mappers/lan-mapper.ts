@@ -11,7 +11,9 @@ class MikrotikLanMapper {
     resourceData: ResourceDTO,
     interfacesData: InterfaceDTO[],
     pingFromEth1: PingDTO[],
-    pingFromEth2: PingDTO[]
+    pingFromEth2: PingDTO[],
+    pingFromEth3: PingDTO[],
+    pingFromEth4: PingDTO[]
   ): Lan {
     const eth1 = interfacesData.find((i) => i["default-name"] === "ether1");
     const eth2 = interfacesData.find((i) => i["default-name"] === "ether2");
@@ -25,8 +27,8 @@ class MikrotikLanMapper {
       uptime: this.mikrotikUptimeToDays(resourceData.uptime),
       eth1: this.miktotikToLan(eth1, pingFromEth1),
       eth2: this.miktotikToLan(eth2, pingFromEth2),
-      eth3: this.miktotikToLan(eth3),
-      eth4: this.miktotikToLan(eth4),
+      eth3: this.miktotikToLan(eth3, pingFromEth3),
+      eth4: this.miktotikToLan(eth4, pingFromEth4),
       eth5: this.miktotikToLan(eth5),
     };
   }
@@ -37,8 +39,25 @@ class MikrotikLanMapper {
   ): LanInterface | null {
     if (!interfaceData) return null;
 
+    const provedores = [
+      "algar",
+      "vivo",
+      "desktop",
+      "polotel",
+      "netcom",
+      "niufibra",
+      "canet",
+      "netwins",
+    ];
+
+    const isUplink = provedores.some((provedor) => {
+      if (interfaceData.comment === undefined) return false;
+
+      return interfaceData.comment.toLowerCase().includes(provedor);
+    });
+
     let pingStatus;
-    if (!!pingData) {
+    if (!!pingData && isUplink) {
       pingStatus = pingData.every((element) => {
         return element.sent === element.received;
       });
@@ -46,6 +65,9 @@ class MikrotikLanMapper {
 
     return {
       status: pingStatus ? pingStatus : interfaceData.running === "true",
+      name: interfaceData["default-name"],
+      isUplink,
+      disabled: interfaceData.disabled === "true",
       rx: Number(interfaceData["rx-byte"]),
       tx: Number(interfaceData["tx-byte"]),
     };
