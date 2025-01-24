@@ -1,7 +1,7 @@
 export interface InterfaceDTO {
   ".id": string;
   "actual-mtu": string;
-  comment: string;
+  comment?: string;
   "default-name": string;
   disabled: string;
   "fp-rx-byte": string;

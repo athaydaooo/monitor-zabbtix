@@ -31,6 +31,14 @@ export class MikrotikService {
       healthCheckServer,
       "ether2"
     );
+    const pingFromEth3 = await this.mikrotikClient.getPing(
+      healthCheckServer,
+      "ether3"
+    );
+    const pingFromEth4 = await this.mikrotikClient.getPing(
+      healthCheckServer,
+      "ether3"
+    );
 
     const lan = MikrotikLanMapper.toDomain(
       this.ipAddress,
@@ -38,7 +46,9 @@ export class MikrotikService {
       resource,
       interfaces,
       pingFromEth1,
-      pingFromEth2
+      pingFromEth2,
+      pingFromEth3,
+      pingFromEth4
     );
 
     return lan;

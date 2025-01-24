@@ -10,7 +10,10 @@ export interface Lan {
 }
 
 export interface LanInterface {
+  name: string;
+  isUplink: boolean;
   status: boolean;
+  disabled: boolean;
   rx: number;
   tx: number;
 }
