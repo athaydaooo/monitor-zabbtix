@@ -40,6 +40,7 @@ class MikrotikLanMapper {
     if (!interfaceData) return null;
 
     const provedores = [
+      "claro",
       "algar",
       "vivo",
       "desktop",
