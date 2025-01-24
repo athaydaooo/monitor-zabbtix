@@ -7,10 +7,12 @@ import {
   getResourceError,
   MIKROTIK_API_ADDRESS_REQUIRED,
   MIKROTIK_API_CONFIG_ERROR,
+  MIKROTIK_API_RESOLVEDNS_ERROR,
 } from "@errors/mikrotik-api";
 import { ResourceDTO } from "@dto/mikrotik/resource-dto";
 import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
 import { PingDTO } from "@dto/mikrotik/ping-dto";
+import { ResolveDnsDTO } from "@dto/mikrotik/resolve-dns-dto";
 
 export class MikroTikClient implements IMikroTikClient {
   private client: AxiosInstance;
@@ -90,6 +92,20 @@ export class MikroTikClient implements IMikroTikClient {
       return interfaces.data;
     } catch (error) {
       throw getIdentityError(this.address);
+    }
+  }
+
+  async resolveDns(domainName: string): Promise<ResolveDnsDTO> {
+    try {
+      const resolvedDns = await this.client.post<ResolveDnsDTO>("/resolve", {
+        "domain-name": domainName,
+      });
+
+      if (resolvedDns.status !== 200) throw MIKROTIK_API_RESOLVEDNS_ERROR;
+
+      return resolvedDns.data;
+    } catch (error) {
+      throw MIKROTIK_API_RESOLVEDNS_ERROR;
     }
   }
 }
