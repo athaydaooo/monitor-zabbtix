@@ -41,7 +41,7 @@ export class ZabbixService {
       return;
     }
 
-    logger.info(`${hostname} - Data sent sent successfully`);
+    logger.info(`${hostname} - Data sent successfully`);
   }
 
   private async sendInterfaceData(
@@ -54,6 +54,16 @@ export class ZabbixService {
         hostname,
         `interface.status.${interfaceName}`,
         interfaceData.status ? 1 : 0
+      );
+      await this.zabbixSenderClient.addData(
+        hostname,
+        `interface.disabled.${interfaceName}`,
+        interfaceData.disabled ? 1 : 0
+      );
+      await this.zabbixSenderClient.addData(
+        hostname,
+        `interface.isuplink.${interfaceName}`,
+        interfaceData.isUplink ? 1 : 0
       );
       await this.zabbixSenderClient.addData(
         hostname,
