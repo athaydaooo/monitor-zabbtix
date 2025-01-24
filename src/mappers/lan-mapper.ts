@@ -54,7 +54,10 @@ class MikrotikLanMapper {
     const isUplink = provedores.some((provedor) => {
       if (interfaceData.comment === undefined) return false;
 
-      return interfaceData.comment.toLowerCase().includes(provedor);
+      return interfaceData.comment
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .includes(provedor);
     });
 
     let pingStatus;
