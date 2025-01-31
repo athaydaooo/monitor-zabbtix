@@ -55,3 +55,9 @@ export const MIKROTIK_API_RESOLVEDNS_ERROR = new AppError(
   500,
   "MIKROTIK_API.RESOLVEDNS_ERROR"
 );
+
+export const MIKROTIK_SERVICE_GETLAN_ERROR = new AppError(
+  `Error trying to resolve get lan.`,
+  500,
+  "MIKROTIK_SERVICE.GETLAN_ERROR"
+);
