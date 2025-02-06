@@ -6,7 +6,7 @@ import { MonitorService } from "@services/monitor-service";
 import { ZabbixService } from "@services/zabbix-service";
 import logger from "@utils/logger";
 
-async function main() {
+const updateAllLans = async function () {
   try {
     const zabbixSender = new ZabbixSenderClient(
       config.zabbixServer,
@@ -32,6 +32,6 @@ async function main() {
       rawError: error,
     });
   }
-}
+};
 
-main();
+export default updateAllLans;
