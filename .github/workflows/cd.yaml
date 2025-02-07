@@ -7,8 +7,8 @@ on:
 env:
   DOCKER_USERNAME: athaydaooo
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKER_REPO: monitor-zabbitix
-  REPOSITORY_NAME: monitor-zabbitix
+  DOCKER_REPO: monitor-zabbtix
+  REPOSITORY_NAME: monitor-zabbtix
   REPOSITORY_OWNER: athaydaooo
 
 jobs:

@@ -3,8 +3,8 @@ kind: Kustomization
 resources:
   - deployment.yaml
 
-namespace: monitor-zabbitix
+namespace: monitor-zabbtix
 images:
   - name: app
-    newName: athaydaooo/monitor-zabbitix
+    newName: athaydaooo/monitor-zabbtix
     newTag: latest
