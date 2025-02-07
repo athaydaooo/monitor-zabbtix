@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitor-zabbitix
+spec:
+  selector:
+    matchLabels:
+      app: monitor-zabbitix
+  template:
+    metadata:
+      labels:
+        app: monitor-zabbitix
+    spec:
+      containers:
+        - name: monitor-zabbitix
+          image: app
