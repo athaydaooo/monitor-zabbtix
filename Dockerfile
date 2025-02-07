@@ -33,8 +33,5 @@ COPY --from=build /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 
-# Copia o script do node-cron
-COPY --from=build /app/cron-script.js ./cron-script.js
-
 # Comando para rodar o script do node-cron
 CMD ["node", "dist/index.js"]
