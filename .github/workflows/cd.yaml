@@ -51,4 +51,4 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "Deploy Action"
           git diff --exit-code || (git commit -am "create image to version ${{ github.sha }}")
-          git push
+          git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.REPOSITORY_OWNER }}/${{ env.REPOSITORY_NAME }}.git HEAD:main
