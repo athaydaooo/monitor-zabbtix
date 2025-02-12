@@ -2,13 +2,13 @@ name: CD - Deploy com ArgoCD
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
 
 env:
   DOCKER_USERNAME: athaydaooo
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKER_REPO: monitor-zabbtix
-  REPOSITORY_NAME: monitor-zabbtzix
+  REPOSITORY_NAME: monitor-zabbtix
   REPOSITORY_OWNER: Commexcom
 
 jobs:

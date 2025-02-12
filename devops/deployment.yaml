@@ -14,3 +14,6 @@ spec:
       containers:
         - name: monitor-zabbtix
           image: app
+          envFrom:
+            - secretRef:
+                name: env-secret
