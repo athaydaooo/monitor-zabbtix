@@ -3,6 +3,8 @@ import { MikrotikService } from "./mikrotik-service";
 import { ZabbixService } from "./zabbix-service";
 import config from "@config/index";
 import logger from "@utils/logger";
+import getCoordinatesFromSheet from "@utils/getCoordanates";
+import { MIKROTIK_SERVICE_GETLAN_ERROR } from "@errors/mikrotik-api";
 
 export class MonitorService {
   private zabbixApiClient: IZabbixApiClient;
@@ -16,14 +18,27 @@ export class MonitorService {
   async updateLan(): Promise<void> {
     try {
       const hosts = await this.zabbixApiClient.getHosts(config.lanHostGroupId);
+      const coordinates = await getCoordinatesFromSheet();
 
       const updateAllLans = hosts.map(async (host) => {
         try {
           const mikrotikService = new MikrotikService(host.interfaces[0].ip);
-          const lan = await mikrotikService.getLan();
+          const lan = await mikrotikService.getLan(host.host);
+
+          const coordinate = coordinates.find((c) => c.host === host.host);
+
+          if (!!coordinate) await this.zabbixService.addCoordinate(coordinate);
+
           await this.zabbixService.addLan(host.host, lan);
           await this.zabbixService.send(host.host);
         } catch (error) {
+          if (error === MIKROTIK_SERVICE_GETLAN_ERROR) {
+            const coordinate = coordinates.find((c) => c.host === host.host);
+            if (!!coordinate)
+              await this.zabbixService.addCoordinate(coordinate);
+            await this.zabbixService.send(host.host);
+          }
+
           logger.error(`Error trying to updateLan ${host.host}`, error);
         }
       });
