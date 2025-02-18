@@ -9,7 +9,7 @@ cron.schedule("* * * * *", async () => {
 
 cron.schedule("* * * * *", async () => {
   setTimeout(async () => {
-    logger.info("Running updateAllLans!");
+    logger.info("Running updateAllLans!!");
     await updateAllLans();
   }, 30000);
 });
