@@ -1,6 +1,6 @@
 repositoryName: monitor-zabbtix
 repositoryOwner: Commexcom
-imageTag: latest
+imageTag: 4fae4f8c85a941f1b2c65f246970723966f9478d-stage
 replicaCount: 2
 service:
   enabled: false
@@ -10,12 +10,7 @@ service:
 ingress:
   enabled: false
   className: "nginx"
-  annotations:
-    {
-      nginx.ingress.kubernetes.io/ssl-redirect: "true",
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true",
-      nginx.ingress.kubernetes.io/rewrite-target: /,
-    }
+  annotations: {nginx.ingress.kubernetes.io/ssl-redirect: "true", nginx.ingress.kubernetes.io/force-ssl-redirect: "true", nginx.ingress.kubernetes.io/rewrite-target: /}
   hosts:
     - host: teste.guaruja.sp.gov.br
       paths:
