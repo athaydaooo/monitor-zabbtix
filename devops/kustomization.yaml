@@ -7,4 +7,4 @@ namespace: monitor-zabbtix
 images:
 - name: app
   newName: athaydaooo/monitor-zabbtix
-  newTag: 18d9160fa5acdd68218f1533740b080111b7013b
+  newTag: fb8d32ec6bd77de554db6f49af31b9840d1b4c33
