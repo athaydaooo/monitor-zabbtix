@@ -11,7 +11,6 @@ on:
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKER_REPO: ${{ github.repository }}
   REPOSITORY_NAME: ${{ github.repository }}
   REPOSITORY_OWNER: ${{ github.repository_owner }}
   TAG_SUFFIX: ${{ github.ref == 'refs/heads/stage' && '-stage' || '' }}
@@ -24,16 +23,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Build image and push to Docker Hub
+        uses: docker/build-push-action@v1.1.0
         with:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
-
-      - name: Build image and push to Docker Hub
-        uses: docker/build-push-action@v6
-        with:
-          push: true
+          repository: ${{ env.REPOSITORY_NAME }}
           tags: ${{ github.sha }}${{ env.TAG_SUFFIX }}, latest${{ env.TAG_SUFFIX }}
 
   deploy:
