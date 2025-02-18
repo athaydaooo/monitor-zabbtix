@@ -25,6 +25,7 @@ export class MikroTikClient implements IMikroTikClient {
     this.address = ipAddress;
 
     this.client = axios.create({
+      timeout: 3000,
       baseURL: `http://${ipAddress}/rest`,
       auth: {
         username,

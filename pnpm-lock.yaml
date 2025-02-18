@@ -11,6 +11,9 @@ importers:
       axios:
         specifier: ^1.7.9
         version: 1.7.9
+      csvtojson:
+        specifier: ^2.0.10
+        version: 2.0.10
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -589,6 +592,9 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
+  bluebird@3.7.2:
+    resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
+
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
 
@@ -679,6 +685,11 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
+
+  csvtojson@2.0.10:
+    resolution: {integrity: sha512-lUWFxGKyhraKCW8Qghz6Z0f2l/PqB1W3AO0HKJzGIQ5JRSlR651ekJDiGJbBT4sRNNv5ddnSGVEnsxP9XRCVpQ==}
+    engines: {node: '>=4.0.0'}
+    hasBin: true
 
   data-view-buffer@1.0.2:
     resolution: {integrity: sha512-EmKO5V3OLXh1rtK2wgXRansaK1/mtVdTUEiEI0W8RkvgT05kfxaH29PliLnpLP73yYO6142Q72QNa8Wx/A5CqQ==}
@@ -1204,6 +1215,9 @@ packages:
     resolution: {integrity: sha512-p3EcsicXjit7SaskXHs1hA91QxgTw46Fv6EFKKGS5DRFLD8yKnohjF3hxoju94b/OcMZoQukzpPpBE9uLVKzgQ==}
     engines: {node: '>= 0.4'}
 
+  is-utf8@0.2.1:
+    resolution: {integrity: sha512-rMYPYvCzsXywIsldgLaSoPlw5PfoB/ssr7hY4pLfcodrA5M/eArza1a9VmTiNIBNMjOGr1Ow9mTyU2o69U6U9Q==}
+
   is-weakmap@2.0.2:
     resolution: {integrity: sha512-K5pXYOm9wqY1RgjpL3YTkF39tni1XajUIkawTLUo9EZEVUFga5gSQJF8nNS7ZwJQ02y+1YCNYcMh+HIf1ZqE+w==}
     engines: {node: '>= 0.4'}
@@ -1281,6 +1295,9 @@ packages:
 
   lodash.sortby@4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
+
+  lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
   logform@2.7.0:
     resolution: {integrity: sha512-TFYA4jnP7PVbmlBIfhlSe+WKxs9dklXMTEGcBCIvLhE/Tn3H6Gk1norupVW7m5Cnd4bLcr08AytbyV/xj7f/kQ==}
@@ -1650,6 +1667,10 @@ packages:
   strip-ansi@7.1.0:
     resolution: {integrity: sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==}
     engines: {node: '>=12'}
+
+  strip-bom@2.0.0:
+    resolution: {integrity: sha512-kwrX1y7czp1E69n2ajbG65mIo9dqvJ+8aBQXOGVxqwvNbsXdFM6Lq37dLAY3mknUwru8CfcCbfOLL/gMo+fi3g==}
+    engines: {node: '>=0.10.0'}
 
   strip-bom@3.0.0:
     resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==}
@@ -2312,6 +2333,8 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
+  bluebird@3.7.2: {}
+
   brace-expansion@1.1.11:
     dependencies:
       balanced-match: 1.0.2
@@ -2406,6 +2429,12 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  csvtojson@2.0.10:
+    dependencies:
+      bluebird: 3.7.2
+      lodash: 4.17.21
+      strip-bom: 2.0.0
 
   data-view-buffer@1.0.2:
     dependencies:
@@ -3059,6 +3088,8 @@ snapshots:
     dependencies:
       which-typed-array: 1.1.18
 
+  is-utf8@0.2.1: {}
+
   is-weakmap@2.0.2: {}
 
   is-weakref@1.1.0:
@@ -3122,6 +3153,8 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash.sortby@4.7.0: {}
+
+  lodash@4.17.21: {}
 
   logform@2.7.0:
     dependencies:
@@ -3520,6 +3553,10 @@ snapshots:
   strip-ansi@7.1.0:
     dependencies:
       ansi-regex: 6.1.0
+
+  strip-bom@2.0.0:
+    dependencies:
+      is-utf8: 0.2.1
 
   strip-bom@3.0.0: {}
 
