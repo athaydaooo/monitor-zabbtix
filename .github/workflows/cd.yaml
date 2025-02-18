@@ -21,6 +21,9 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Mostrar Secret
+        run: "echo ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWORD }}"
+
       - name: Checkout
         uses: actions/checkout@v2
 
