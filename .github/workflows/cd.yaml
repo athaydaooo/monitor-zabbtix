@@ -2,14 +2,18 @@ name: CD - Deploy com ArgoCD
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, stage]
+    paths-ignore:
+      - "devops/**"
+      - ".github/**"
+      - ".husky/**"
 
 env:
-  DOCKER_USERNAME: athaydaooo
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKER_REPO: monitor-zabbtix
-  REPOSITORY_NAME: monitor-zabbtix
-  REPOSITORY_OWNER: Commexcom
+  DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
+  REPOSITORY_NAME: ${{ github.repository }}
+  REPOSITORY_OWNER: ${{ github.repository_owner }}
 
 jobs:
   build:
@@ -35,16 +39,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install Kustomize
-        uses: imranismail/setup-kustomize@v1
-        with:
-          kustomize_version: v3.6.1
-
-      - name: Update Kubernetes manifests
+      - name: Install yq
         run: |
-          cd devops
-          kustomize edit set image app=${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:${{ github.sha }}
-          cat kustomization.yaml
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Change `imageTag` on values.yaml
+        run: |
+          yq e -i '.imageTag = "${{ github.sha }}"' devops/values.yaml
 
       - name: Commit changes
         run: |
