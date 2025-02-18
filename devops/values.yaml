@@ -1,0 +1,27 @@
+repositoryName: monitor-zabbtix
+repositoryOwner: Commexcom
+imageTag: latest
+replicaCount: 2
+service:
+  enabled: false
+  type: ClusterIP
+  internalPort: 3000
+  externalPort: 443
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    {
+      nginx.ingress.kubernetes.io/ssl-redirect: "true",
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true",
+      nginx.ingress.kubernetes.io/rewrite-target: /,
+    }
+  hosts:
+    - host: teste.guaruja.sp.gov.br
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - teste.guaruja.sp.gov.br
+      secretName: guarujaspgovbr-tls

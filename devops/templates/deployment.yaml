@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.repositoryName }}-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.repositoryName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.repositoryName }}
+    spec:
+      containers:
+        - name: {{ .Values.repositoryName }}
+          image: "{{ .Values.repositoryOwner }}/{{ .Values.repositoryName }}:{{ .Values.imageTag }}"
+          envFrom:
+            - secretRef:
+                name: env-secret
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+
