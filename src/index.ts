@@ -3,7 +3,7 @@ import updateAllLans from "jobs/update-all-lan";
 import cron from "node-cron";
 
 cron.schedule("* * * * *", async () => {
-  logger.info("Running updateAllLans!");
+  logger.info("Running updateAllLans");
   await updateAllLans();
 });
 

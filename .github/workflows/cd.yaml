@@ -9,8 +9,8 @@ on:
       - ".husky/**"
 
 env:
-  DOCKER_USERNAME: commexcom
-  DOCKER_PASSWORD: teste
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKER_REPO: ${{ github.repository }}
   REPOSITORY_NAME: ${{ github.repository }}
   REPOSITORY_OWNER: ${{ github.repository_owner }}
