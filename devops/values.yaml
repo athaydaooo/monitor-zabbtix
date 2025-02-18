@@ -1,5 +1,5 @@
 repositoryName: monitor-zabbtix
-repositoryOwner: Commexcom
+repositoryOwner: commexcom
 imageTag: latest
 replicaCount: 2
 service:
