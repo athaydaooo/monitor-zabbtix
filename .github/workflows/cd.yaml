@@ -9,8 +9,8 @@ on:
       - ".husky/**"
 
 env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ vars.DOCKER_PASSWORD }}
   DOCKER_REPO: ${{ github.repository }}
   REPOSITORY_NAME: ${{ github.repository }}
   REPOSITORY_OWNER: ${{ github.repository_owner }}
@@ -33,7 +33,7 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
           repository: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}
-          tags: ${{ github.sha }}${{ env.TAG_SUFFIX }}, latest
+          tags: ${{ github.sha }}${{ env.TAG_SUFFIX }}, latest${{ env.TAG_SUFFIX }}
 
   deploy:
     name: Deploy with ArgoCD
