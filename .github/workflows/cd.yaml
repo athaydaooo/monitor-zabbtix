@@ -2,14 +2,18 @@ name: CD - Deploy com ArgoCD
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, stage]
+    paths-ignore:
+      - "devops/**"
+      - ".github/**"
+      - ".husky/**"
 
 env:
-  DOCKER_USERNAME: athaydaooo
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKER_REPO: monitor-zabbtix
-  REPOSITORY_NAME: monitor-zabbtix
-  REPOSITORY_OWNER: Commexcom
+  REPOSITORY_NAME: ${{ github.repository }}
+  REPOSITORY_OWNER: ${{ github.repository_owner }}
+  TAG_SUFFIX: ${{ github.ref == 'refs/heads/stage' && '-stage' || '' }}
 
 jobs:
   build:
@@ -24,8 +28,8 @@ jobs:
         with:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
-          repository: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}
-          tags: ${{ github.sha }}, latest
+          repository: ${{ env.REPOSITORY_NAME }}
+          tags: ${{ github.sha }}${{ env.TAG_SUFFIX }}, latest${{ env.TAG_SUFFIX }}
 
   deploy:
     name: Deploy with ArgoCD
@@ -35,20 +39,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install Kustomize
-        uses: imranismail/setup-kustomize@v1
-        with:
-          kustomize_version: v3.6.1
-
-      - name: Update Kubernetes manifests
+      - name: Install yq
         run: |
-          cd devops
-          kustomize edit set image app=${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:${{ github.sha }}
-          cat kustomization.yaml
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Change `imageTag` on values.yaml
+        run: |
+          yq e -i '.imageTag = "${{ github.sha }}${{ env.TAG_SUFFIX }}"' devops/values.yaml
 
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Deploy Action"
-          git diff --exit-code || (git commit -am "create image to version ${{ github.sha }}")
+          git diff --exit-code || (git commit -am "create image to version ${{ github.sha }}${{ env.TAG_SUFFIX }}")
           git push

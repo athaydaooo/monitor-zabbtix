@@ -1,0 +1,14 @@
+{{- if .Values.service.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.repositoryName }}-service
+spec:
+  selector:
+    app: {{ .Values.repositoryName }}
+  ports:
+    - port: {{ .Values.service.externalPort }}
+      targetPort: {{ .Values.service.internalPort }}
+      protocol: TCP
+  type: {{ .Values.service.type }}
+{{- end }}
