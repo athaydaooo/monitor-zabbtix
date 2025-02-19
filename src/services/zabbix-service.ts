@@ -1,6 +1,6 @@
 import { IZabbixSenderClient } from "@clients/zabbix-sender/i-zabbix-sender-client";
 import { Lan, LanInterface } from "@domain/Lan";
-import { HostCoordinate } from "@utils/getCoordanates";
+import { HostData } from "@utils/get-lan-info-from-sheet";
 import logger from "@utils/logger";
 
 export class ZabbixService {
@@ -36,17 +36,23 @@ export class ZabbixService {
     await this.sendInterfaceData(zabbixHostName, "5", lanData.eth5);
   }
 
-  async addCoordinate(coordinate: HostCoordinate): Promise<void> {
+  async addLanData(lanData: HostData): Promise<void> {
     await this.zabbixSenderClient.addData(
-      coordinate.host,
+      lanData.host,
       "latitude",
-      coordinate.latitude
+      lanData.latitude
     );
 
     await this.zabbixSenderClient.addData(
-      coordinate.host,
+      lanData.host,
       "longitude",
-      coordinate.longitude
+      lanData.longitude
+    );
+
+    await this.zabbixSenderClient.addData(
+      lanData.host,
+      "descricao",
+      lanData.name
     );
   }
 

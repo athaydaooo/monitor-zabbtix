@@ -2,13 +2,14 @@ import axios from "axios";
 import csv from "csvtojson";
 import { GET_SHEET_DATA_ERROR } from "@errors/sheet";
 
-export interface HostCoordinate {
+export interface HostData {
   latitude: number;
   longitude: number;
   host: string;
+  name: string;
 }
 
-async function getCoordinatesFromSheet(): Promise<HostCoordinate[]> {
+async function getLanInfoFromSheet(): Promise<HostData[]> {
   try {
     const url = `https://docs.google.com/spreadsheets/d/11nX5gzxfbcHdrzR12ttZGL4RSjmppLqd/export?format=csv`;
 
@@ -20,21 +21,21 @@ async function getCoordinatesFromSheet(): Promise<HostCoordinate[]> {
       noheader: false,
     }).fromString(rows);
 
-    const filteredCoordinates: HostCoordinate[] = sheetJson
+    const filteredData: HostData[] = sheetJson
       .filter((row: any) => row.Latitude && row.Longitude && row.LAN)
       .map(
         (row: any) =>
           ({
             latitude: Number(row.Latitude),
             longitude: Number(row.Longitude),
+            name: row.Setor,
             host: `lan_${row.LAN}`,
-          }) as HostCoordinate
+          }) as HostData
       );
-
-    return filteredCoordinates;
+    return filteredData;
   } catch {
     throw GET_SHEET_DATA_ERROR;
   }
 }
 
-export default getCoordinatesFromSheet;
+export default getLanInfoFromSheet;
