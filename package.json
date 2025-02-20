@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsup src/*.ts --out-dir dist --clean",
-    "start": "ts-node -r tsconfig-paths/register src/index.ts"
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
+    "updateLans": "ts-node -r tsconfig-paths/register src/run-update-lans.ts",
+    "updateL2TPServers": "ts-node -r tsconfig-paths/register src/run-update-l2tp-servers.ts"
   },
   "keywords": [],
   "author": "",

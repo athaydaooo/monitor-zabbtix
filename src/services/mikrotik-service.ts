@@ -1,21 +1,30 @@
 import { IMikroTikClient } from "@clients/mikrotik/i-mikrotik-client";
 import { MikroTikClient } from "@clients/mikrotik/mikrotik-client";
 import config from "@config/index";
+import { L2TPServer } from "@domain/l2tp-server";
 import { Lan } from "@domain/Lan";
 import { MIKROTIK_SERVICE_GETLAN_ERROR } from "@errors/mikrotik-api";
 import logger from "@utils/logger";
+import MikrotikL2tpServerMapper from "mappers/l2tp-server-mapper";
 import MikrotikLanMapper from "mappers/lan-mapper";
 
 export class MikrotikService {
   private mikrotikClient: IMikroTikClient;
   private ipAddress: string;
 
-  constructor(ipAddress: string) {
+  constructor(
+    ipAddress: string,
+    username?: string,
+    password?: string,
+    port?: number
+  ) {
     this.ipAddress = ipAddress;
+
     this.mikrotikClient = new MikroTikClient(
       ipAddress,
-      config.mikrotikLanUser,
-      config.mikrotikLanPassword
+      username || config.mikrotikUsername,
+      password || config.mikrotikPassword,
+      port
     );
   }
 
@@ -61,6 +70,28 @@ export class MikrotikService {
       return lan;
     } catch (error) {
       logger.error(`Error trying to getLan data ${hostname}`, error);
+      throw MIKROTIK_SERVICE_GETLAN_ERROR;
+    }
+  }
+
+  async getL2TPServer(hostname: string): Promise<L2TPServer> {
+    try {
+      const identity = await this.mikrotikClient.getIdentity();
+      const interfaces = await this.mikrotikClient.getInterfaces();
+      const l2tpInterfaces = await this.mikrotikClient.getL2TPInterfaces();
+      const resource = await this.mikrotikClient.getResource();
+
+      const l2tpServer = MikrotikL2tpServerMapper.toDomain(
+        this.ipAddress,
+        identity,
+        resource,
+        l2tpInterfaces,
+        interfaces
+      );
+
+      return l2tpServer;
+    } catch (error) {
+      logger.error(`Error trying to getL2TPServer data ${hostname}`, error);
       throw MIKROTIK_SERVICE_GETLAN_ERROR;
     }
   }

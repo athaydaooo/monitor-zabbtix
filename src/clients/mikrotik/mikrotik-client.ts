@@ -3,6 +3,8 @@ import { IdentityDTO } from "@dto/mikrotik/identity-dto";
 import { IMikroTikClient } from "./i-mikrotik-client";
 import {
   getIdentityError,
+  getInterfacesError,
+  getL2TPInterfacesError,
   getPingError,
   getResourceError,
   MIKROTIK_API_ADDRESS_REQUIRED,
@@ -13,20 +15,25 @@ import { ResourceDTO } from "@dto/mikrotik/resource-dto";
 import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
 import { PingDTO } from "@dto/mikrotik/ping-dto";
 import { ResolveDnsDTO } from "@dto/mikrotik/resolve-dns-dto";
+import { L2TPInterfaceDTO } from "@dto/mikrotik/l2tp-interface-dto";
 
 export class MikroTikClient implements IMikroTikClient {
   private client: AxiosInstance;
   private address: string;
 
-  constructor(ipAddress: string, username: string, password: string) {
+  constructor(
+    ipAddress: string,
+    username: string,
+    password: string,
+    port?: number
+  ) {
     if (!ipAddress || !username || !password) {
       throw MIKROTIK_API_CONFIG_ERROR;
     }
     this.address = ipAddress;
-
     this.client = axios.create({
       timeout: 3000,
-      baseURL: `http://${ipAddress}/rest`,
+      baseURL: `http://${ipAddress}:${port || 80}/rest`,
       auth: {
         username,
         password,
@@ -88,11 +95,25 @@ export class MikroTikClient implements IMikroTikClient {
     try {
       const interfaces = await this.client.get<InterfaceDTO[]>("/interface");
 
-      if (interfaces.status !== 200) throw getIdentityError(this.address);
+      if (interfaces.status !== 200) throw getInterfacesError(this.address);
 
       return interfaces.data;
     } catch (error) {
-      throw getIdentityError(this.address);
+      throw getInterfacesError(this.address);
+    }
+  }
+
+  async getL2TPInterfaces(): Promise<L2TPInterfaceDTO[]> {
+    try {
+      const interfaces = await this.client.get<L2TPInterfaceDTO[]>(
+        "/interface/l2tp-server"
+      );
+
+      if (interfaces.status !== 200) throw getL2TPInterfacesError(this.address);
+
+      return interfaces.data;
+    } catch (error) {
+      throw getL2TPInterfacesError(this.address);
     }
   }
 
