@@ -68,7 +68,6 @@ export class MonitorService {
           );
 
           const l2tpServer = await mikrotikService.getL2TPServer(host.host);
-          logger.info(`L2TPServer ${host.host} data:`, l2tpServer);
           await this.zabbixService.addL2TPServer(host.host, l2tpServer);
           await this.zabbixService.send(host.host);
         } catch (error) {
