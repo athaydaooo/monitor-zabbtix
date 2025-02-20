@@ -22,7 +22,11 @@ export class MonitorService {
 
       const updateAllLans = hosts.map(async (host) => {
         try {
-          const mikrotikService = new MikrotikService(host.interfaces[0].ip);
+          const mikrotikService = new MikrotikService(
+            host.interfaces[0].ip,
+            config.mikrotikLanUsername,
+            config.mikrotikLanPassword
+          );
           const lan = await mikrotikService.getLan(host.host);
 
           const lanData = lansData.find((c) => c.host === host.host);
@@ -45,6 +49,35 @@ export class MonitorService {
       await Promise.allSettled(updateAllLans);
     } catch (error) {
       logger.error(`Error trying to updateAllLan`, error);
+    }
+  }
+
+  async updateL2TPServer(): Promise<void> {
+    try {
+      const hosts = await this.zabbixApiClient.getHosts(
+        config.l2tpServerHostGroupId
+      );
+
+      const updateAllL2TPServers = hosts.map(async (host) => {
+        try {
+          const mikrotikService = new MikrotikService(
+            host.interfaces[0].ip,
+            config.mikrotikUsername,
+            config.mikrotikPassword,
+            5580
+          );
+
+          const l2tpServer = await mikrotikService.getL2TPServer(host.host);
+          await this.zabbixService.addL2TPServer(host.host, l2tpServer);
+          await this.zabbixService.send(host.host);
+        } catch (error) {
+          logger.error(`Error trying to updateL2TPServer ${host.host}`, error);
+        }
+      });
+
+      await Promise.allSettled(updateAllL2TPServers);
+    } catch (error) {
+      logger.error(`Error trying to updateL2TPServers`, error);
     }
   }
 }

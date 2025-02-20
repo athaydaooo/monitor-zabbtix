@@ -50,6 +50,14 @@ export const getInterfacesError = (address: string): AppError => {
   );
 };
 
+export const getL2TPInterfacesError = (address: string): AppError => {
+  return new AppError(
+    `Error trying to get Mikrotik interfaces from ${address}.`,
+    500,
+    "MIKROTIK_API.L2TP_INTERFACES_ERROR"
+  );
+};
+
 export const MIKROTIK_API_RESOLVEDNS_ERROR = new AppError(
   `Error trying to resolve dns.`,
   500,
