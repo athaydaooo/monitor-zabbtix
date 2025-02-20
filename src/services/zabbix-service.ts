@@ -73,6 +73,12 @@ export class ZabbixService {
       l2tpServerData.uptime
     );
 
+    await this.zabbixSenderClient.addData(
+      zabbixHostName,
+      "l2tp.connections.active",
+      l2tpServerData.activeL2TPSessions
+    );
+
     await this.sendL2TPServerInterfaceData(
       zabbixHostName,
       "1",
