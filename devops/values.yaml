@@ -1,6 +1,6 @@
 repositoryName: monitor-zabbtix
 repositoryOwner: commexcom
-imageTag: d31ab6c1d0f6851cc2bcd373f445bfde9cb3d194-stage
+imageTag: 58e582895ec2785970c6b01c33bbaf2eb30452b9
 replicaCount: 1
 service:
   enabled: false
