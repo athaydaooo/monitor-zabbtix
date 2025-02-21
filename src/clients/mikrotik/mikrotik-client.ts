@@ -30,7 +30,6 @@ export class MikroTikClient implements IMikroTikClient {
     if (!ipAddress || !username || !password) {
       throw MIKROTIK_API_CONFIG_ERROR;
     }
-    console.log(`http://${ipAddress}:${port || 80}/rest`);
     this.address = ipAddress;
     this.client = axios.create({
       timeout: 3000,
@@ -88,7 +87,6 @@ export class MikroTikClient implements IMikroTikClient {
 
       return identity.data;
     } catch (error) {
-      console.log(JSON.stringify(error));
       throw getIdentityError(this.address);
     }
   }
