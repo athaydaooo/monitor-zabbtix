@@ -79,6 +79,18 @@ export class ZabbixService {
       "descricao",
       lanData.name
     );
+
+    await this.zabbixSenderClient.addData(
+      lanData.host,
+      "secretaria",
+      lanData.secretariat
+    );
+
+    await this.zabbixSenderClient.addData(
+      lanData.host,
+      "endereco",
+      lanData.address
+    );
   }
 
   async addL2TPServer(
