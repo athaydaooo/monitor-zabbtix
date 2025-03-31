@@ -82,13 +82,13 @@ export class ZabbixService {
 
     await this.zabbixSenderClient.addData(
       lanData.host,
-      "secretaria",
+      "secretariat",
       lanData.secretariat
     );
 
     await this.zabbixSenderClient.addData(
       lanData.host,
-      "endereco",
+      "address",
       lanData.address
     );
   }
