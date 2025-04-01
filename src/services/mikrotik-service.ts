@@ -33,8 +33,11 @@ export class MikrotikService {
       const healthCheckServer = config.healthCheckServer;
 
       const identity = await this.mikrotikClient.getIdentity();
+      const routerboard = await this.mikrotikClient.getRouterboard();
+      const ipDns = await this.mikrotikClient.getIpDns();
       const interfaces = await this.mikrotikClient.getInterfaces();
       const resource = await this.mikrotikClient.getResource();
+      const ping = await this.mikrotikClient.getPing(healthCheckServer);
       const pingFromEth1 = await this.mikrotikClient.getPing(
         healthCheckServer,
         "ether1"
@@ -58,8 +61,11 @@ export class MikrotikService {
       const lan = MikrotikLanMapper.toDomain(
         this.ipAddress,
         identity,
+        routerboard,
+        ipDns,
         resource,
         interfaces,
+        ping,
         pingFromEth1,
         pingFromEth2,
         pingFromEth3,

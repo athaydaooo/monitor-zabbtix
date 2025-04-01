@@ -1,6 +1,11 @@
 export interface Lan {
   hostname: string;
   ipAddress: string;
+  latency: number;
+  packetLoss: number;
+  dnsAddreses: string;
+  model: string;
+  version: string;
   uptime: number;
   dns: boolean;
   eth1: LanInterface | null;
@@ -12,6 +17,9 @@ export interface Lan {
 
 export interface LanInterface {
   name: string;
+  comment: string;
+  mac: string;
+  type: string;
   isUplink: boolean;
   status: boolean;
   disabled: boolean;

@@ -26,8 +26,38 @@ export class ZabbixService {
 
     await this.zabbixSenderClient.addData(
       zabbixHostName,
+      "latency",
+      lanData.latency
+    );
+
+    await this.zabbixSenderClient.addData(
+      zabbixHostName,
+      "model",
+      lanData.model
+    );
+
+    await this.zabbixSenderClient.addData(
+      zabbixHostName,
+      "packetLoss",
+      lanData.packetLoss
+    );
+
+    await this.zabbixSenderClient.addData(
+      zabbixHostName,
+      "version",
+      lanData.version
+    );
+
+    await this.zabbixSenderClient.addData(
+      zabbixHostName,
       "dns",
       lanData.dns ? 1 : 0
+    );
+
+    await this.zabbixSenderClient.addData(
+      zabbixHostName,
+      "dnsAddreses",
+      lanData.dnsAddreses
     );
 
     await this.sendLanInterfaceData(zabbixHostName, "1", lanData.eth1);
@@ -54,6 +84,18 @@ export class ZabbixService {
       lanData.host,
       "descricao",
       lanData.name
+    );
+
+    await this.zabbixSenderClient.addData(
+      lanData.host,
+      "secretariat",
+      lanData.secretariat
+    );
+
+    await this.zabbixSenderClient.addData(
+      lanData.host,
+      "address",
+      lanData.address
     );
   }
 
@@ -117,6 +159,24 @@ export class ZabbixService {
     interfaceData: LanInterface | null
   ): Promise<void> {
     if (interfaceData) {
+      await this.zabbixSenderClient.addData(
+        hostname,
+        `interface.mac.${interfaceName}`,
+        interfaceData.mac
+      );
+
+      await this.zabbixSenderClient.addData(
+        hostname,
+        `interface.comment.${interfaceName}`,
+        interfaceData.comment
+      );
+
+      await this.zabbixSenderClient.addData(
+        hostname,
+        `interface.type.${interfaceName}`,
+        interfaceData.type
+      );
+
       await this.zabbixSenderClient.addData(
         hostname,
         `interface.status.${interfaceName}`,

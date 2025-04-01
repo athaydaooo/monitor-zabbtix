@@ -1,16 +1,21 @@
 import { Lan, LanInterface } from "@domain/Lan";
 import { IdentityDTO } from "@dto/mikrotik/identity-dto";
 import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
+import { IpDnsDTO } from "@dto/mikrotik/ip-dns-dto";
 import { PingDTO } from "@dto/mikrotik/ping-dto";
 import { ResolveDnsDTO } from "@dto/mikrotik/resolve-dns-dto";
 import { ResourceDTO } from "@dto/mikrotik/resource-dto";
+import { RouterboardDTO } from "@dto/mikrotik/routerboard-dto";
 
 class MikrotikLanMapper {
   static toDomain(
     ipAddress: string,
     identityData: IdentityDTO,
+    routerboardData: RouterboardDTO,
+    ipDnsData: IpDnsDTO,
     resourceData: ResourceDTO,
     interfacesData: InterfaceDTO[],
+    ping: PingDTO[],
     pingFromEth1: PingDTO[],
     pingFromEth2: PingDTO[],
     pingFromEth3: PingDTO[],
@@ -23,9 +28,25 @@ class MikrotikLanMapper {
     const eth4 = interfacesData.find((i) => i["default-name"] === "ether4");
     const eth5 = interfacesData.find((i) => i["default-name"] === "ether5");
 
+    const dnsAddreses = ipDnsData.servers;
+
+    const latency = ping.every((element) => element.sent === element.received)
+      ? parseInt(ping[0].time.split("ms")[0])
+      : -1;
+    const packetLoss = ping.every(
+      (element) => element.sent === element.received
+    )
+      ? parseInt(ping[0]["packet-loss"])
+      : -1;
+
     return {
       hostname: identityData.name,
       ipAddress,
+      dnsAddreses,
+      latency,
+      model: routerboardData.model,
+      version: resourceData.version,
+      packetLoss,
       dns: !!resolvedDns.ret,
       uptime: this.mikrotikUptimeToDays(resourceData.uptime),
       eth1: this.miktotikToLan(eth1, pingFromEth1),
@@ -74,6 +95,9 @@ class MikrotikLanMapper {
       status: pingStatus ? pingStatus : interfaceData.running === "true",
       name: interfaceData["default-name"],
       isUplink,
+      comment: interfaceData.comment || "",
+      mac: interfaceData["mac-address"],
+      type: interfaceData.type,
       disabled: interfaceData.disabled === "true",
       rx: Number(interfaceData["rx-byte"]),
       tx: Number(interfaceData["tx-byte"]),
