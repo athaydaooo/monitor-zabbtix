@@ -42,6 +42,22 @@ export const getIdentityError = (address: string): AppError => {
   );
 };
 
+export const getIpDnsError = (address: string): AppError => {
+  return new AppError(
+    `Error trying to get Mikrotik Ip DNS of ${address}.`,
+    500,
+    "MIKROTIK_API.IP_DNS_ERROR"
+  );
+};
+
+export const getRouterboardError = (address: string): AppError => {
+  return new AppError(
+    `Error trying to get Mikrotik Routerboard of ${address}.`,
+    500,
+    "MIKROTIK_API.ROUTERBOARD_ERROR"
+  );
+};
+
 export const getInterfacesError = (address: string): AppError => {
   return new AppError(
     `Error trying to get Mikrotik interfaces from ${address}.`,

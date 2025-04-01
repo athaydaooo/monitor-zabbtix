@@ -4,4 +4,5 @@ export interface PingDTO {
   sent: string;
   seq: string;
   status: string;
+  time: string;
 }

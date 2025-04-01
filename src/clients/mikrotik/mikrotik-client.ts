@@ -4,9 +4,11 @@ import { IMikroTikClient } from "./i-mikrotik-client";
 import {
   getIdentityError,
   getInterfacesError,
+  getIpDnsError,
   getL2TPInterfacesError,
   getPingError,
   getResourceError,
+  getRouterboardError,
   MIKROTIK_API_ADDRESS_REQUIRED,
   MIKROTIK_API_CONFIG_ERROR,
   MIKROTIK_API_RESOLVEDNS_ERROR,
@@ -16,6 +18,8 @@ import { InterfaceDTO } from "@dto/mikrotik/interface-dto";
 import { PingDTO } from "@dto/mikrotik/ping-dto";
 import { ResolveDnsDTO } from "@dto/mikrotik/resolve-dns-dto";
 import { L2TPInterfaceDTO } from "@dto/mikrotik/l2tp-interface-dto";
+import { IpDnsDTO } from "@dto/mikrotik/ip-dns-dto";
+import { RouterboardDTO } from "@dto/mikrotik/routerboard-dto";
 
 export class MikroTikClient implements IMikroTikClient {
   private client: AxiosInstance;
@@ -88,6 +92,32 @@ export class MikroTikClient implements IMikroTikClient {
       return identity.data;
     } catch (error) {
       throw getIdentityError(this.address);
+    }
+  }
+
+  async getIpDns(): Promise<IpDnsDTO> {
+    try {
+      const response = await this.client.get<IpDnsDTO>("/ip/dns");
+
+      if (response.status !== 200) throw getIdentityError(this.address);
+
+      return response.data;
+    } catch (error) {
+      throw getIpDnsError(this.address);
+    }
+  }
+
+  async getRouterboard(): Promise<RouterboardDTO> {
+    try {
+      const response = await this.client.get<RouterboardDTO>(
+        "/system/routerboard"
+      );
+
+      if (response.status !== 200) throw getIdentityError(this.address);
+
+      return response.data;
+    } catch (error) {
+      throw getRouterboardError(this.address);
     }
   }
 

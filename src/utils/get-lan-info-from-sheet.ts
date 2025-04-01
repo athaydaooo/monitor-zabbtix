@@ -7,6 +7,8 @@ export interface HostData {
   longitude: number;
   host: string;
   name: string;
+  secretariat: string;
+  address: string;
 }
 
 async function getLanInfoFromSheet(): Promise<HostData[]> {
@@ -30,6 +32,8 @@ async function getLanInfoFromSheet(): Promise<HostData[]> {
             longitude: Number(row.Longitude),
             name: row.Setor,
             host: `lan_${row.LAN}`,
+            address: `${row["Endereço"]}, ${row["Nº"]} - ${row.Bairro}`,
+            secretariat: row.Secretaria,
           }) as HostData
       );
     return filteredData;

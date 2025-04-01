@@ -13,7 +13,7 @@ const config = {
   zabbixServer: process.env.ZABBIX_SERVER || "",
   mikrotikUsername: process.env.MIKROTIK_USERNAME || "",
   mikrotikPassword: process.env.MIKROTIK_PASSWORD || "",
-  mikrotikLanUsername: process.env.MIKROTIK_LAN_USERANME || "",
+  mikrotikLanUsername: process.env.MIKROTIK_LAN_USERNAME || "",
   mikrotikLanPassword: process.env.MIKROTIK_LAN_PASSWORD || "",
   healthCheckServer: process.env.HEALTH_CHECK_SERVER || "",
   lanHostGroupId: process.env.LAN_HOST_GROUP_ID || "",
