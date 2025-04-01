@@ -54,6 +54,12 @@ export class ZabbixService {
       lanData.dns ? 1 : 0
     );
 
+    await this.zabbixSenderClient.addData(
+      zabbixHostName,
+      "dnsAddreses",
+      lanData.dnsAddreses
+    );
+
     await this.sendLanInterfaceData(zabbixHostName, "1", lanData.eth1);
     await this.sendLanInterfaceData(zabbixHostName, "2", lanData.eth2);
     await this.sendLanInterfaceData(zabbixHostName, "3", lanData.eth3);

@@ -28,7 +28,6 @@ export class MonitorService {
             config.mikrotikLanPassword
           );
           const lan = await mikrotikService.getLan(host.host);
-          logger.info(`lan`, lan);
 
           const lanData = lansData.find((c) => c.host === host.host);
 

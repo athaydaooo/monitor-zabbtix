@@ -3,7 +3,7 @@ export interface Lan {
   ipAddress: string;
   latency: number;
   packetLoss: number;
-  dnsAdresses: string[];
+  dnsAddreses: string;
   model: string;
   version: string;
   uptime: number;

@@ -32,7 +32,7 @@ async function getLanInfoFromSheet(): Promise<HostData[]> {
             longitude: Number(row.Longitude),
             name: row.Setor,
             host: `lan_${row.LAN}`,
-            address: `${row.Endereco}, ${row.Numero} - ${row.Bairro}`,
+            address: `${row["Endereço"]}, ${row["Nº"]} - ${row.Bairro}`,
             secretariat: row.Secretaria,
           }) as HostData
       );

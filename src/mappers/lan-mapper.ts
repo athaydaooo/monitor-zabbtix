@@ -28,7 +28,7 @@ class MikrotikLanMapper {
     const eth4 = interfacesData.find((i) => i["default-name"] === "ether4");
     const eth5 = interfacesData.find((i) => i["default-name"] === "ether5");
 
-    const dnsAdresses = ipDnsData.servers.split(",");
+    const dnsAddreses = ipDnsData.servers;
 
     const latency = ping.every((element) => element.sent === element.received)
       ? parseInt(ping[0].time.split("ms")[0])
@@ -42,7 +42,7 @@ class MikrotikLanMapper {
     return {
       hostname: identityData.name,
       ipAddress,
-      dnsAdresses,
+      dnsAddreses,
       latency,
       model: routerboardData.model,
       version: resourceData.version,
